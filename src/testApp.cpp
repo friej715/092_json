@@ -50,7 +50,7 @@ public:
         conn.hook_irc_command("376", ((testApp*)ofGetAppPtr())->end_of_motd);
         
         // Mozilla's IRC rooms are easy to test with. They do seem to require 6697 r/t 6667 though
-        conn.start("janelastname.jtvirc.com", 6667, "", "", "", ""); // !FILL THESE IN! It's basically like, name, name, name, password
+        conn.start("irc.foonetic.net", 6667, "jln", "jln", "jln", ""); // !FILL THESE IN! It's basically like, name, name, name, password
         
         conn.join("#janelastname"); // make sure to choose the right channel AND change it at the bottom
         
@@ -143,38 +143,6 @@ void testApp::update(){
         
     }
     
-//    cout << "hai brosz" << ((threadedIRC*)tIRC)->conn.name << endl;
-    
-    // cout << "a health : " << a.health << endl;
-    // cout << "b health : " << b.health << endl;
-    
-    
-    //    if (int(ofGetElapsedTimef()) > lastCheckTime + 5) {
-    //        bool success;
-    //        success=justinTV.open("http://api.justin.tv/api/stream/list.json?channel=janelastname");
-    //    
-    //        if (isOnline == false) {
-    //            string jtv;
-    //            jtv = justinTV.getRawString();
-    //            
-    //            if (jtv.length() > 4) { 
-    //                isOnline = true;
-    //            } else {
-    //                isOnline = false;
-    //            }
-    //        }
-    //        
-    //        if (isOnline) {
-    //            bool success;
-    //            success=justinTV.open("http://api.justin.tv/api/stream/list.json?channel=janelastname");
-    //            
-    //            channelCount = scrapeValue("channel_count", justinTV.getRawString());
-    //            numViewers = channelCount;
-    //        }
-    //        lastCheckTime = ofGetElapsedTimef();
-    //    }
-    
-    //    if (gameState == 1) {
     ofxGamepad* pad1 = ofxGamepadHandler::get()->getGamepad(0);
     ofxGamepad* pad2 = ofxGamepadHandler::get()->getGamepad(1);
     
@@ -256,16 +224,6 @@ void testApp::update(){
     
     a.checkIsColliding(b);
     b.checkIsColliding(a);
-    
-    //        for (int i = 0; i < enemies.size(); i++) {
-    //            enemies[i].update();
-    //            
-    //            if (ofDist(enemies[i].pos.x, enemies[i].pos.y, player1.pos.x, player1.pos.y) > ofDist(enemies[i].pos.x, enemies[i].pos.y, player2.pos.x, player2.pos.y)){
-    //                enemies[i].angle = atan2(player1.pos.y - enemies[i].pos.y, player1.pos.x - enemies[i].pos.x);
-    //            } else {
-    //                enemies[i].angle = atan2(player2.pos.y - enemies[i].pos.y, player2.pos.x - enemies[i].pos.x);
-    //            }
-    //        }
 
     
     
@@ -305,29 +263,6 @@ void testApp::update(){
         }
     }
     
-    
-    //        
-    //        if (ofGetElapsedTimef() > startTimeWave + intervalWave) {
-    //            newEnemyWave();
-    //            startTimeWave = ofGetElapsedTimef();
-    //        }
-    //        
-    //        
-    //        if (numViewers > lastNumViewers) {
-    //            player1.isCursed = true;
-    //            startTimeCurse = ofGetElapsedTimef();
-    //            lastNumViewers = numViewers;
-    //        }
-    //        
-    //        if (player1.isCursed == true) {
-    //            cursePlayer();
-    //        }
-    //        
-    //        if (player1.health <= 0) {
-    //          // gameState = 2;
-    //        }
-    //        
-    //        
     for (int i = 0; i < healthList.size(); i++) {
         healthList[i].update();
     }
@@ -353,91 +288,16 @@ void testApp::update(){
     }
     
     collisionLogic();
-    //        
-    //    }
     
     
     
-    while(serverReceiver.hasWaitingMessages()){
-		// get the next message
-		ofxOscMessage m;
-		serverReceiver.getNextMessage(&m);
-		//Log received message for easier debugging of participants' messages:
-		ofLogVerbose("Server recvd msg " + getOscMsgAsString(m) + " from " + m.getRemoteIp());
-        
-		// check the address of the incoming message
-		if(m.getAddress() == "/typing"){
-			//Identify host of incoming msg
-			string incomingHost = m.getRemoteIp();
-			//See if incoming host is a new one:
-			if(std::find(knownClients.begin(), knownClients.end(), incomingHost)
-			   == knownClients.end()){
-				knownClients.push_back(incomingHost); //add new host to list
-			}
-			// get the first argument (we're only sending one) as a string
-			if(m.getNumArgs() > 0){
-				if(m.getArgType(0) == OFXOSC_TYPE_STRING){
-					//reimplemented message display:
-					//If vector has reached max size, delete the first/oldest element
-					if(serverMessages.size() == maxServerMessages){
-						serverMessages.erase(serverMessages.begin());
-					}
-					//Add message text at the end of the vector
-					serverMessages.push_back(m.getArgAsString(0));
-                    
-					//Broadcast message to other chat participants
-					broadcastReceivedMessage(m.getArgAsString(0));
-                    
-                    evaluateChat(m.getArgAsString(0), 0); // ramiro
-				}
-			}
-		}
-		// handle getting random OSC messages here
-		else{
-			ofLogWarning("Server got weird message: " + m.getAddress());
-		}
-	}
-    
-	// Client side:
-    
-	// OSC receiver queues up new messages, so you need to iterate
-	// through waiting messages to get each incoming message
-    
-	// check for waiting messages
-	while(clientReceiver.hasWaitingMessages()){
-		// get the next message
-		ofxOscMessage m;
-		clientReceiver.getNextMessage(&m);
-		ofLogNotice("Client just received a message");
-		// check the address of the incoming message
-		if(m.getAddress() == "/chatlog"){
-			// get the first argument (we're only sending one) as a string
-			if(m.getNumArgs() > 0){
-				if(m.getArgType(0) == OFXOSC_TYPE_STRING){
-					string oldMessages = clientMessages;
-					clientMessages = m.getArgAsString(0) + "\n" + oldMessages;
-				}
-			}
-		}
-	}
-    
-	//this is purely workaround for a mysterious OSCpack bug on 64bit linux
-	// after startup, reinit the receivers
-	// must be a timing problem, though - in debug, stepping through, it works.
-	if(ofGetFrameNum() == 60){
-		clientReceiver.setup(clientRecvPort);
-		serverReceiver.setup(serverRecvPort);
-    }
+
     
     
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    
-    //    if (gameState == 1) {
-    
-    //        ofxGamepadHandler::get()->draw(10,10);
     
     a.draw();
     b.draw();
@@ -465,28 +325,6 @@ void testApp::draw(){
     }
     ofDisableAlphaBlending();
     
-    //    weapon.draw();
-    
-    //        ofNoFill();
-    
-    //        for (int i = 0; i < enemies.size(); i++) {
-    //            enemies[i].draw();
-    //            ofRectMode(OF_RECTMODE_CORNER);
-    //            if (ofDist(player1.pos.x, player1.pos.y, enemies[i].pos.x, enemies[i].pos.y) < 10 && (player1.isHit == false)) {
-    //                ofEnableAlphaBlending();
-    //                ofFill();
-    //                ofSetColor(255, 255, 255, 100);
-    //                ofRect(0, 0, 1024, 768);
-    //                ofDisableAlphaBlending();
-    //                
-    //                player1.startTimeHit = ofGetElapsedTimef();
-    //                cout << "start time hit" << player1.startTimeHit << endl;
-    //                player1.health-=5;
-    //                player1.isHit = true;
-    //                
-    //            }
-    //        }
-    
     for (int i = 0; i < healthList.size(); i++) {
         healthList[i].draw();
     }
@@ -495,37 +333,7 @@ void testApp::draw(){
     }
     
     creature.draw();
-    
-    //    }
-    
-    string debug = "Chat client\nSending messages to " + string(clientDestination) + ":"
-    + ofToString(clientSendPort);
-	string instructions = "type to create a new message.\nhit RETURN to send!";
-    
-	airshipLittle.drawString(debug, 10, 37);
-	airshipLittle.drawString(instructions, 10, 93);
-    
-	// what have we typed so far?
-	airshipLittle.drawString(clientTyping, 10, 160);
-    
-	//received messages:
-	airshipLittle.drawString(clientMessages, 10, 180);
-    
-    
-    //Display some information about the server
-	string title = "Chat server";
-	airshipLittle.drawString(title, 542, 37);
-	title = "Listening for messages on port " + ofToString(serverRecvPort) + ".\nKnown chatters: "
-    + ofToString(knownClients.size());
-	airshipLittle.drawString(title, 542, 65);
-    
-	//Display received messages:
-	serverTyping = "";
-	// Concatenate a nice multiline string to display
-	for(unsigned int i = 0; i < serverMessages.size(); i++){
-		string oldTyping = serverTyping;
-		serverTyping = oldTyping + "\n" + serverMessages[i];
-	}
+
     
     //tetsing the line
     ofSetColor(255);
@@ -551,61 +359,6 @@ void testApp::keyReleased  (int key){
         creature.isActive = true;
     }
     
-    //    if(key != OF_KEY_RETURN){
-    //		// some trickery: ignore the backspace key
-    //		if(key != OF_KEY_BACKSPACE){
-    //			clientTyping += key;
-    //		}
-    //		else{
-    //			if(clientTyping.size() > 0){
-    //				clientTyping.erase(clientTyping.end() - 1);
-    //			}
-    //		}
-    //	}
-    //	// hit Return, time to send the osc message
-    //	else{
-    //		// to send a string, create an ofxOscMessage object, give it an address
-    //		// and add a string argument to the object
-    //		ofxOscMessage m;
-    //		m.setAddress("/typing");
-    //		m.addStringArg(clientTyping);
-    //		clientSender.sendMessage(m);
-    //        
-    //		// clear out "typing"
-    //		clientTyping = "";
-    //	}
-    
-    //    if (key == '=') {
-    //        numViewers++;
-    //    }
-    //    if (key == '-') {
-    //        numViewers--;
-    //    }
-    //    
-    //    
-    //    if (key == 'j') {
-    //        bool success;
-    //        success=justinTV.open("http://api.justin.tv/api/stream/list.json?channel=janelastname");
-    //        
-    //        if (success) {
-    //            cout << justinTV.getRawString() << endl; // will return [] if offline
-    //        } else {
-    //            cout << "oh shit y'all failed" << endl;
-    //        }
-    //        channelCount = scrapeValue("channel_count", justinTV.getRawString());
-    //        
-    //        numViewers = channelCount;
-    //    }
-    //    
-    //    if (key == ' ') {
-    //        if (gameState == 0) {
-    //            gameState = 1;
-    //        }
-    //        
-    ////        if (gameState == 2) {
-    ////            gameState = 1;
-    ////        }
-    //    }
     
 }
 
@@ -666,28 +419,6 @@ void testApp::povChanged(ofxGamepadPovEvent &e)
 	cout << endl;
 }
 
-//--------------------------------------------------------------
-void testApp::cursePlayer() {
-    /* 
-     potential curses:
-     - add particles to chain (limited)
-     - speed up enemies (limited)
-     - add in another wave
-     - decrease time between all waves
-     - add in more harder enemies/add in primarily combos of fast and slow
-     */
-    
-    
-    intervalCurse = 5;
-    
-    //    if (ofGetElapsedTimef() > startTimeCurse + intervalCurse) {
-    //        player1.isCursed = false;
-    //        cout << "done cursing" << endl;
-    //    }
-    
-    ofSetColor(255, 0, 0);
-    
-}
 //--------------------------------------------------------------
 void testApp::checkPlayerInRange(Player &x, Player &y) {
     // called when a player swings; prereq to calling below function
@@ -795,37 +526,6 @@ void testApp::checkHitCreature(Player &x, Creature &c) { // thanks to andy walla
             x.col = ofColor::cyan;
             wasFacing = true;
             
-            /*
-            //check if b is facing a - if it is, then b is blocking
-            float diffAngle2[3];
-            //now get the angle from b to a
-            diffAngle2[0] = atan2(x.pos.y - y.pos.y, x.pos.x - y.pos.x);
-            
-            //then make the two alternate verisons to check
-            diffAngle2[1] = diffAngle2[0]+TWO_PI;
-            diffAngle2[2] = diffAngle2[0]-TWO_PI;
-            
-            bool wasFacing2 = false;    //assume that b was facing away from a
-            
-            for (int k=0; k<3; k++){
-                if (abs(y.angle-diffAngle2[k]) < angleRange){
-                    wasFacing2 = true;
-                }
-                
-            }
-            
-            if (wasFacing2 && y.isBlocking){
-                //b is facing a and is blocking
-                y.col = ofColor::green;
-                //   cout << "safe" << endl;
-            } else {
-                //b is facing away and can be hit
-                y.col = ofColor::red;
-                cout << "hit" << endl;
-                y.health-=10;
-            }
-             */
-            
         }
     }
     
@@ -834,26 +534,9 @@ void testApp::checkHitCreature(Player &x, Creature &c) { // thanks to andy walla
     }
     cout << "hit " << endl;
     
-    if (!wasFacing){
-        //a is not even facing b
-        x.col = ofColor::gray;
-//        y.col = ofColor::gray;
-        // cout << "not even facing" << endl;
-    }
-    
     
 }
 
-
-//--------------------------------------------------------------
-void testApp::newEnemyWave() {
-    for (int i = 0; i < 3; i++) {
-        //        Enemy e;
-        //        e.setup();
-        //        enemies.push_back(e);
-        //        cout << "wave" << endl;
-    }
-}
 //--------------------------------------------------------------
 float testApp::scrapeValue(string field, string rawText){
     string fieldText = "\""+field+"\" : ";
@@ -867,49 +550,7 @@ float testApp::scrapeValue(string field, string rawText){
 void updateOSC() {
 }
 
-//--------------------------------------------------------------
-string testApp::getOscMsgAsString(ofxOscMessage m){
-	string msg_string;
-	msg_string = m.getAddress();
-	msg_string += ":";
-	for(int i = 0; i < m.getNumArgs(); i++){
-		// get the argument type
-		msg_string += " " + m.getArgTypeName(i);
-		msg_string += ":";
-		// display the argument - make sure we get the right type
-		if(m.getArgType(i) == OFXOSC_TYPE_INT32){
-			msg_string += ofToString(m.getArgAsInt32(i));
-		}
-		else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
-			msg_string += ofToString(m.getArgAsFloat(i));
-		}
-		else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
-			msg_string += m.getArgAsString(i);
-		}
-		else{
-			msg_string += "unknown";
-		}
-	}
-	return msg_string;
-}
-//--------------------------------------------------------------
-void testApp::broadcastReceivedMessage(string chatmessage){
-    
-	//create a new OSC message
-	ofxOscMessage m;
-	m.setAddress("/chatlog");
-	m.addStringArg(chatmessage);
-    
-	//Send message to all known hosts
-	// use another port to avoid a localhost loop
-	for(unsigned int i = 0; i < knownClients.size(); i++){
-		serverSender.setup(knownClients[i], serverRecvPort + 1);
-		m.setRemoteEndpoint(knownClients[i], serverRecvPort + 1);
-		serverSender.sendMessage(m);
-		ofLogVerbose("Server broadcast message " + m.getArgAsString(0) + " to " + m.getRemoteIp()
-					 + ":" + ofToString(m.getRemotePort()));
-	}
-}
+
 //--------------------------------------------------------------
 void testApp::evaluateChat(string chat, int newLength){
 	// bool foundPhrase = false;
@@ -1096,26 +737,6 @@ void testApp::createChatObject(string player1Name, string action, string locatio
 //--------------------------------------------------------------
 void testApp::reset() {
     gameState = 1;   
-    //    // JustinTV API (p much same as twitch) http://www.justin.tv/p/api
-    //    bool success;
-    //    success=justinTV.open("http://api.justin.tv/api/stream/list.json?channel=janelastname");
-    //    
-    //    if (success) {
-    //        cout << justinTV.getRawString() << endl; // will return [] if offline
-    //        string jtv;
-    //        jtv = justinTV.getRawString();
-    //        if (jtv.length() > 4)   isOnline = true;
-    //    } else {
-    //        cout << "oh shit y'all failed" << endl;
-    //    }
-    //    
-    //    if (isOnline) {
-    //        channelCount = scrapeValue("channel_count", justinTV.getRawString());
-    //        channelViewCount = scrapeValue("channel_view_count", justinTV.getRawString());
-    //        
-    //        cout << "channel_count : " << channelCount << endl;
-    //        cout << "channel_view_count : " << channelViewCount << endl;
-    //    }
     
 	//CHECK IF THERE EVEN IS A GAMEPAD CONNECTED
 	if(ofxGamepadHandler::get()->getNumPads()>0){
@@ -1155,23 +776,6 @@ void testApp::reset() {
     angleRange = ofDegToRad(45);
     airship.loadFont("airship.ttf", 36);
     airshipLittle.loadFont("airship.ttf", 12);
-    
-    // OSC STUFF --------
-    //Server side
-	//listen for incoming messages on a port; setup OSC receiver with usage:
-	serverRecvPort = 9000;
-	serverReceiver.setup(serverRecvPort);
-	maxServerMessages = 38;
-    
-	//Client side
-	//clientDestination = "localhost";
-    clientDestination	= "192.168.0.100"; // if you send to another instance enter IP here
-	clientSendPort = 9000;
-	clientSender.setup(clientDestination, clientSendPort);
-    
-    clientRecvPort = clientSendPort + 1;
-	//clientRecvPort = clientSendPort - 1;
-	clientReceiver.setup(clientRecvPort);
     
     keywordList.push_back("health");
 	keywordList.push_back("bullet");
