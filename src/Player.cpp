@@ -9,28 +9,6 @@
 #include <iostream>
 #include "Player.h"
 
-//void Player::setup(int player) {
-//    
-//    maxSpeed = 6.0f;
-//    isHit = false;
-//    
-//    height = 30;
-//    width = height/2;
-//    
-//    if (player == 1) { 
-//        pos.x = ofGetWidth()/4;
-//        pos.y = ofGetHeight()/4;
-//    }
-//    
-//    if (player == 2) {
-//        pos.x = ofGetWidth()*.75;
-//        pos.y = ofGetHeight()*.75;
-//    }
-//    
-//    
-//    col.set(10, 10, 10);
-//}
-
 void Player::update() {
    
     // determining direction facing
@@ -40,6 +18,11 @@ void Player::update() {
         angle = lastAngle;
     }
     
+    //set speed based on isDashing
+    if(isDashing) { speed = 2.0; }
+    else if(isBlocking) {speed = 0.2;}
+    else { speed = 0.6; }
+    
     // making diagonal speed not exceed fastest left/right/up/down
     float speedRatio = maxSpeed / (abs(velocity.x)+abs(velocity.y));
     if (speedRatio < 1) {
@@ -47,9 +30,12 @@ void Player::update() {
         velocity.y *= speedRatio;
     }
     
-    // reg'lar movement
-    velocity*=.7;
-    pos += velocity;
+    // reg'lar movement (and also dashing movement -Ramiro)
+    velocity *= speed;
+
+//    if (health > 0) {
+//        pos += velocity;
+//    }
     
     // limiting to bounds of screen
     if (pos.x > ofGetWidth() - size/2)    pos.x = ofGetWidth() - size/2;
@@ -71,37 +57,22 @@ void Player::update() {
 //            isHit = false;
 //        }
 //    }
+
+    if(attackCooldown > 0) {
+        attackCooldown--;
+        canAttack = false;
+    }
+    else { canAttack = true; }
 //    
     if (isAttacking) {
         attack();
     }
 //
-//    
+//
+    
+    sprintLogic();
 }
-//
-//void Player::draw() {
-//    
-//    ofFill();
-//    ofPushMatrix();
-//    ofTranslate(pos.x, pos.y);
-//    ofRotateZ(ofRadToDeg(lastAngle));
-//    ofSetColor(col);
-//    ofEllipse(0, 0, width, height);
-//    ofSetColor(0, 0, 255);
-//    ofLine(0, 0, 0 + width, 0);
-//   
-//    if (isBlocking) {
-//        ofEllipse(10 + cos(lastAngle), 0, 20, 20);
-//        
-//        shieldLocation.x = 10 + cos(lastAngle) + pos.x;
-//        shieldLocation.y = pos.y;
-//    }
-//    
-//    ofPopMatrix();
-//
-//    
-//}
-//
+
 void Player::attack() {
     //cout << "attacking" << endl;
     currentWeaponAngle = ofDegToRad(ofMap(startTimeAttack + intervalAttack - ofGetElapsedTimef(), 0, intervalAttack, startWeaponAngle, endWeaponAngle));
@@ -109,7 +80,7 @@ void Player::attack() {
     if (ofGetElapsedTimef() > startTimeAttack + intervalAttack) {
         //cout << "end attack timer" << endl;
         isAttacking = false;
-        canAttack = true; // not enough to provide cooldown, if that matters
+     //   canAttack = true; // not enough to provide cooldown, if that matters
     }
     
 }
@@ -124,6 +95,12 @@ void Player::setup(float x, float y){
     maxSpeed = 6.0f;
     intervalAttack = .2; // this should probably be in weapon?
     health = 100;
+    
+    sprintTimerMax = 30;
+    sprintCooldownMax = 120;
+    
+    healthFont.loadFont("Candara.ttf", 24);
+    
 }
 
 void Player::draw(){
@@ -146,4 +123,40 @@ void Player::draw(){
         ofPopMatrix();
     }
     
+    healthFont.drawString(ofToString(health), pos.x - healthFont.stringWidth(ofToString(health))/2, pos.y);
+    
+}
+
+void Player::sprintLogic() {
+    if (sprintTimer > 0) {
+        isDashing = true;
+        sprintTimer--;
+    } else {
+        isDashing = false;
+    }
+    
+    if (sprintCooldown > 0) {
+        sprintCooldown--;
+    }
+    
+    
+}
+
+void Player::checkIsColliding(Player y) {
+    float moveX = velocity.x;
+    float moveY = velocity.y;
+    
+    ofPoint posNextX = pos;
+    posNextX.x += moveX;
+    
+    if (ofDist(posNextX.x, posNextX.y, y.pos.x, y.pos.y) > size + size) {
+        pos.x += velocity.x;
+    }
+    
+    ofPoint posNextY = pos;
+    posNextY.y += moveY;
+    
+    if (ofDist(posNextY.x, posNextY.y, y.pos.x, y.pos.y) > size + size) {
+        pos.y += velocity.y;
+    }
 }

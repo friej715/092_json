@@ -29,6 +29,7 @@ public:
     bool canAttack;
     bool isBlocking;
     bool isHolding;
+    bool isDashing; //set to true if the player is dashing
 //    bool isHit;
 //    
 //    float startTimeHit;
@@ -47,6 +48,18 @@ public:
     float startWeaponAngle;
     float currentWeaponAngle;
     float endWeaponAngle;
+    
+    int attackCooldown; //if this is above 0, you can't start a new attack
+    int attackCooldownMax = 30; //this is what the timer will be set to when an attack begins
+    
+    int sprintTimer;
+    int sprintTimerMax;
+    int sprintCooldown;
+    int sprintCooldownMax;
+    
+    void sprintLogic();
+    
+    float speed; //multiplier for how fast the player moves
  
 //    ofColor col;
 
@@ -61,5 +74,9 @@ public:
     void setup(float x, float y);
     void turn(int dir);
     void draw();
+    
+    void checkIsColliding(Player y);
+
+    ofTrueTypeFont healthFont;
     
 };
