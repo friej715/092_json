@@ -9,24 +9,23 @@
 #include <iostream>
 #include "Bullet.h"
 
-Bullet::Bullet(string myPlayerName, ofVec2f myPos, ofVec2f myVel)
+void Bullet::setup(string myPlayerName, ofVec2f myPos, ofVec2f myVel)
 
 {
+    generalSetup();
 	playerName = myPlayerName;
 	pos = myPos;
 	vel = myVel;
     
-    size = int(ofRandom(35, 45));
+    width = 40;
+    height = 40;
     
     airshipLittle.loadFont("airship.ttf", 20);
 }
 
 
-Bullet::~Bullet(void)
-{
-}
 
-void Bullet::update(){
+void Bullet::customUpdate(){
 	pos += vel;
 	if(pos.x > 2000 || pos.x < -2000 || pos.y > 2000 || pos.y < 2000){
 		//remove this health from healthList
@@ -35,7 +34,7 @@ void Bullet::update(){
 
 void Bullet::draw(){
 	ofSetColor(178, 34, 34);
-	ofRect(pos, size, size);
+	ofRect(pos, width, height);
     ofSetColor(255, 120, 120);
     airshipLittle.drawString(ofToString(playerName), pos.x, pos.y + 35);
     ofRectMode(OF_RECTMODE_CORNER);

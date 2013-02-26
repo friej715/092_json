@@ -9,22 +9,17 @@
 #ifndef json_Bullet_h
 #define json_Bullet_h
 #include "ofMain.h"
+#include "GameObject.h"
 
-class Bullet
-{
+class Bullet : public GameObject {
 public:
-	Bullet(string myPlayerName, ofVec2f myPos, ofVec2f myVel);
-	~Bullet(void);
+	void setup(string myPlayerName, ofVec2f myPos, ofVec2f myVel);
     
-	void update();
-	void draw();
+	void customUpdate() override;
+	void draw() override;
     
 	string playerName;
-	ofVec2f pos;
-	ofVec2f vel;
-    
-    int size;
-    
+        
     ofTrueTypeFont airshipLittle;
 };
 

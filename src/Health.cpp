@@ -10,23 +10,21 @@
 #include "Health.h"
 
 
-Health::Health(string myPlayerName, ofVec2f myPos, ofVec2f myVel)
+void Health::setup(string myPlayerName, ofVec2f myPos, ofVec2f myVel)
 {
+    generalSetup();
 	playerName = myPlayerName;
 	pos = myPos;
 	vel = myVel;
     
-    size = int(ofRandom(25, 35));
+    width = 40;
+    height = 40;
     
     airshipLittle.loadFont("airship.ttf", 20);
 }
 
 
-Health::~Health(void)
-{
-}
-
-void Health::update(){
+void Health::customUpdate(){
 	pos += vel;
 	if(pos.x > 2000 || pos.x < -2000 || pos.y > 2000 || pos.y < 2000){
 		//remove this health from healthList
@@ -34,8 +32,9 @@ void Health::update(){
 }
 
 void Health::draw(){
-	ofSetColor(0, 100, 240);
-	ofCircle(pos, size);
-    ofSetColor(100, 255, 255);
-    airshipLittle.drawString(ofToString(playerName), pos.x - airshipLittle.stringWidth(ofToString(playerName))/2, pos.y + 10);
+	ofSetColor(78, 34, 134);
+	ofRect(pos, width, height);
+    ofSetColor(255, 120, 120);
+    airshipLittle.drawString(ofToString(playerName), pos.x, pos.y + 35);
+    ofRectMode(OF_RECTMODE_CORNER);
 }

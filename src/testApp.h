@@ -4,7 +4,6 @@
 #include "ofMain.h"
 #include "particle.h"
 #include "spring.h"
-#include "Enemy.h"
 #include "Player.h"
 #include "ofxGamepadHandler.h"
 #include "Health.h"
@@ -13,6 +12,8 @@
 #include "Creature.h"
 #include "Spectator.h"
 #include "Irc.h"
+#include "Blocker.h"
+#include "GameObject.h"
 
 
 class testApp : public ofBaseApp{
@@ -46,6 +47,9 @@ class testApp : public ofBaseApp{
     void povChanged(ofxGamepadPovEvent &e);		
 
     
+    vector<GameObject *> objects;
+    vector<Weapon *> weapons;
+    
     Player a;
     Player b;
     
@@ -60,14 +64,10 @@ class testApp : public ofBaseApp{
     
     void checkCreatureInRange(Player &pA, Creature &c);
     void checkHitCreature(Player &pA, Creature &c);
-    
-    //Weapon weapon;
-    vector<Weapon> weapons;
-    
-    
-    // enemiessszzzz
-    vector<Enemy> enemies;
 
+    
+    
+    void removeObject(int num);
     
     
     // interactivity

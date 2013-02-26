@@ -83,7 +83,7 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     
-    cout<<"should check: "<<weShouldCheck<<endl;
+    //cout<<"should check: "<<weShouldCheck<<endl;
     
     if ( ((threadedIRC*)tIRC)->conn.someoneHasJoined ) {
         // spawn a spectator
@@ -204,71 +204,62 @@ void testApp::update(){
     
     
     // a little easier to just adjust the vel by gamepad here rather than in player1
-    a.velocity.x = 0;
-    a.velocity.y = 0;
+    a.vel.x = 0;
+    a.vel.y = 0;
     
-    b.velocity.x = 0;
-    b.velocity.y = 0;
+    b.vel.x = 0;
+    b.vel.y = 0;
     
-    a.velocity.x+=(pad1->getAxisValue(0))*a.maxSpeed;
-    a.velocity.y+=(pad1->getAxisValue(1))*a.maxSpeed;
+    a.vel.x+=(pad1->getAxisValue(0))*a.maxSpeed;
+    a.vel.y+=(pad1->getAxisValue(1))*a.maxSpeed;
     
-    b.velocity.x+=(pad2->getAxisValue(0))*b.maxSpeed;
-    b.velocity.y+=(pad2->getAxisValue(1))*b.maxSpeed;
+    b.vel.x+=(pad2->getAxisValue(0))*b.maxSpeed;
+    b.vel.y+=(pad2->getAxisValue(1))*b.maxSpeed;
     
     a.angle = atan2(pad1->getAxisValue(3), pad1->getAxisValue(2));
     b.angle = atan2(pad2->getAxisValue(3), pad2->getAxisValue(2));
+
+    cout<<"PLAYER A VEL "<<a.vel<<endl;
     
-    a.update();
-    b.update();
     
-    a.checkIsColliding(b);
-    b.checkIsColliding(a);
+    
+    
+    for (int i = 0; i < objects.size(); i++) {
+        objects[i]->preUpdate();
+    }
+    
+    for (int i = 0; i < objects.size(); i++) {
+        for (int k = 0; k < i; k++) {
+            objects[i]->checkValidMovement(objects[k]);
+        }
+    }
+    
+    for (int i = 0; i < objects.size(); i++) {
+        objects[i]->update();
+    }
+    
+    
+//    a.checkIsColliding(b);
+//    b.checkIsColliding(a);
 
     
     
     
     for (int i = 0; i < weapons.size(); i++) {
-        if (ofDist(a.pos.x, a.pos.y, weapons[i].pos.x, weapons[i].pos.y) < weapons[i].image.width && weapons[i].isHeld == false && a.isHolding == false) {
-            weapons[i].isHeld = true;
-            weapons[i].heldByPlayer = 1;
+        if (ofDist(a.pos.x, a.pos.y, weapons[i]->pos.x, weapons[i]->pos.y) < weapons[i]->image.width && weapons[i]->isHeld == false && a.isHolding == false) {
+            weapons[i]->isHeld = true;
+            weapons[i]->player = &a;
             a.isHolding = true;
         }
         
-        if (ofDist(b.pos.x, b.pos.y, weapons[i].pos.x, weapons[i].pos.y) < weapons[i].image.width && weapons[i].isHeld == false && b.isHolding == false) {
-            weapons[i].isHeld = true;
-            weapons[i].heldByPlayer = 2;
+        if (ofDist(b.pos.x, b.pos.y, weapons[i]->pos.x, weapons[i]->pos.y) < weapons[i]->image.width && weapons[i]->isHeld == false && b.isHolding == false) {
+            weapons[i]->isHeld = true;
+            weapons[i]->player = &b;
             b.isHolding = true;
         }
     }
     
-    
-    for (int i = 0; i < weapons.size(); i++) {
-        if (weapons[i].isHeld == true) {
-            if (weapons[i].heldByPlayer == 1 && a.isAttacking == false) {
-                //cout << "a is not attacking" << endl;
-                weapons[i].update(a.lastAngle, a.pos);
-            } else if (weapons[i].heldByPlayer == 1 && a.isAttacking == true) {
-                //cout << "a is attacking" << endl;
-                weapons[i].update(a.currentWeaponAngle, a.pos);
-            }
-            
-            if (weapons[i].heldByPlayer == 2 && b.isAttacking == false) {
-                //cout << "b is not attacking" << endl;
-                weapons[i].update(b.lastAngle, b.pos);
-            } else if (weapons[i].heldByPlayer == 2 && b.isAttacking == true) {
-                //cout << "b is attacking" << endl;
-                weapons[i].update(b.currentWeaponAngle, b.pos);
-            }
-        }
-    }
-    
-    for (int i = 0; i < healthList.size(); i++) {
-        healthList[i].update();
-    }
-    for (int i = 0; i < bulletList.size(); i++) {
-        bulletList[i].update();
-    }
+
     
     creature.figureOutCloser(a, b);
     creature.update(a, b);
@@ -299,38 +290,33 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     
-    a.draw();
-    b.draw();
+    for (int i = 0; i < objects.size(); i++) {
+        objects[i]->draw();
+    }
     
-    ofEnableAlphaBlending();
-    ofSetColor(255, 255, 255, 255);
-    for (int i = 0; i < weapons.size(); i++) {
-        if (!weapons[i].isHeld) {
-            weapons[i].draw();   
-        }
-        
-        int hBP = weapons[i].heldByPlayer;
-        
-        if (hBP == 1) {
-            if (a.isAttacking) {
-                weapons[i].draw();
-            }
-        }
-        
-        if (hBP == 2) {
-            if (b.isAttacking) {
-                weapons[i].draw();
-            }
-        }
-    }
-    ofDisableAlphaBlending();
+//    ofEnableAlphaBlending();
+//    ofSetColor(255, 255, 255, 255);
+//    for (int i = 0; i < weapons.size(); i++) {
+//        if (!weapons[i]->isHeld) {
+//            weapons[i]->draw();   
+//        }
+//        
+//        int hBP = weapons[i]->heldByPlayer;
+//        
+//        if (hBP == 1) {
+//            if (a.isAttacking) {
+//                weapons[i]->draw();
+//            }
+//        }
+//        
+//        if (hBP == 2) {
+//            if (b.isAttacking) {
+//                weapons[i]->draw();
+//            }
+//        }
+//    }
+//    ofDisableAlphaBlending();
     
-    for (int i = 0; i < healthList.size(); i++) {
-        healthList[i].draw();
-    }
-    for (int i = 0; i < bulletList.size(); i++) {
-        bulletList[i].draw();
-    }
     
     creature.draw();
 
@@ -348,7 +334,15 @@ void testApp::keyPressed  (int key){
     //    
     //    if (key==358)   b.turn(1);
     //    if (key==356)   b.turn(-1);
-	
+    
+//    cout<<"spawn a damn health"<<endl;
+//    ofPoint pnt;
+//    pnt.set(50,50) ;
+//    ofPoint vel;
+//    vel.set(1,0) ;
+//    Health * myHealth = new Health();
+//    myHealth->setup("harry", pnt, vel);
+//    objects.push_back(myHealth);
 }
 
 //--------------------------------------------------------------
@@ -424,7 +418,7 @@ void testApp::checkPlayerInRange(Player &x, Player &y) {
     // called when a player swings; prereq to calling below function
     cout << "seeing if in range" << endl;
     // if in range
-    if (ofDist(x.pos.x, x.pos.y, y.pos.x, y.pos.y) < x.size*3) {
+    if (ofDist(x.pos.x, x.pos.y, y.pos.x, y.pos.y) < x.width*3) {
         checkPlayerHit(x, y);
     }
     
@@ -435,7 +429,7 @@ void testApp::checkCreatureInRange(Player &x, Creature &c) {
     // called when a player swings; prereq to calling below function
     cout << "seeing if in range" << endl;
     // if in range
-    if (ofDist(x.pos.x, x.pos.y, creature.pos.x, creature.pos.y) < creature.width + x.size) {
+    if (ofDist(x.pos.x, x.pos.y, creature.pos.x, creature.pos.y) < creature.width + x.width) {
         checkHitCreature(x, creature);
     }
     
@@ -717,22 +711,21 @@ void testApp::createChatObject(string player1Name, string action, string locatio
     
     
 	if(action == "health") { 
-		Health myHealth(player1Name, pos, vel);
-		healthList.push_back(myHealth);
+		Health * myHealth = new Health();
+        myHealth->setup(player1Name, pos, vel);
+        objects.push_back(myHealth);
 	}
 	else if (action == "bullet") { 
-		Bullet myBullet(player1Name, pos, vel);
-        bulletList.push_back(myBullet);
+		Bullet * myBullet = new Bullet();
+        myBullet->setup(player1Name, pos, vel);
+        objects.push_back(myBullet);
+        
 	} else if (action == "creature" && creature.isAlive == false) {
         creature.isActive = true;
         creature.isAlive = true;
         cout << "OH LOOK THINGS ARE GREAT AND LIFE IS COOL"<< endl;
     }
-//    } else if (action == "join") {
-//        Spectator s;
-//        s.name = player1Name;
-//        spectators.push_back(s);
-//    }
+
 }
 //--------------------------------------------------------------
 void testApp::reset() {
@@ -761,15 +754,22 @@ void testApp::reset() {
 	ofSetVerticalSync(true);
 	ofSetFrameRate(60);
     
+    Blocker blocker;
+    //objects.push_back(&blocker);
+    
+    
     a.setup(ofGetWidth()/4, ofGetHeight()/4);
     b.setup(ofGetWidth()*.75, ofGetHeight()*.75);
-    //weapon.setup();
+    
+    objects.push_back(&a);
+    objects.push_back(&b);
     
     creature.setup();
     
     for (int i = 0; i < 2; i++) {
-        Weapon w;
-        w.setup();
+        Weapon * w = new Weapon();
+        w->setup();
+        objects.push_back(w);
         weapons.push_back(w);
     }
     
@@ -786,14 +786,14 @@ void testApp::reset() {
 //--------------------------------------------------------------
 void testApp::collisionLogic(){
 	for(int i = 0; i < healthList.size(); i++){
-		if(ofDist(a.pos.x, a.pos.y, healthList[i].pos.x, healthList[i].pos.y) < (a.size + healthList[i].size)){
+		if(ofDist(a.pos.x, a.pos.y, healthList[i].pos.x, healthList[i].pos.y) < (a.width + healthList[i].width)){
 			a.health += 20;
 			healthList.erase(healthList.begin() + i);
 		}
 	}
     
     for(int i = 0; i < healthList.size(); i++){
-		if(ofDist(b.pos.x, b.pos.y, healthList[i].pos.x, healthList[i].pos.y) < (b.size + healthList[i].size)){
+		if(ofDist(b.pos.x, b.pos.y, healthList[i].pos.x, healthList[i].pos.y) < (b.width + healthList[i].width)){
 			b.health += 20;
 			healthList.erase(healthList.begin() + i);
 		}
@@ -801,20 +801,27 @@ void testApp::collisionLogic(){
     
     
 	for(int i = 0; i < bulletList.size(); i++){
-		if(ofDist(a.pos.x, a.pos.y, bulletList[i].pos.x, bulletList[i].pos.y) < (a.size + bulletList[i].size)){
+		if(ofDist(a.pos.x, a.pos.y, bulletList[i].pos.x, bulletList[i].pos.y) < (a.width + bulletList[i].width)){
 			a.health -= 5;
 			bulletList.erase(bulletList.begin() + i);
 		}
 	}
     
     for(int i = 0; i < bulletList.size(); i++){
-		if(ofDist(b.pos.x, b.pos.y, bulletList[i].pos.x, bulletList[i].pos.y) < (b.size + bulletList[i].size)){
+		if(ofDist(b.pos.x, b.pos.y, bulletList[i].pos.x, bulletList[i].pos.y) < (b.width + bulletList[i].width)){
 			b.health -= 5;
 			bulletList.erase(bulletList.begin() + i);
 		}
 	}
     
 }
+
+//--------------------------------------------------------------
+void testApp::removeObject(int num){
+    delete objects[num];
+    objects.erase(objects.begin() + num);
+}
+
 //--------------------------------------------------------------
 int testApp::end_of_motd(char* params, irc_reply_data* hostd, void* conn)
 {

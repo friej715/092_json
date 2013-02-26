@@ -10,38 +10,30 @@
 #include "ofMain.h"
 #include "particle.h"
 #include "spring.h"
+#include "GameObject.h"
 
-class Player {
+class Player : public GameObject {
 public:    
+    void setup(float x, float y);
+    
+    
     int health;
-//    int height;
-//    int width;
-//    ofPoint shieldLocation;
-//    
-//    ofPoint pos;
-    ofVec2f velocity;
-//    float angle;
+    
     float lastAngle;
-//    
-//    bool isCursed;
-//    bool isTriggered;
     bool isAttacking;
     bool canAttack;
     bool isBlocking;
     bool isHolding;
     bool isDashing; //set to true if the player is dashing
-//    bool isHit;
-//    
-//    float startTimeHit;
-//    float intervalHit;
-//    
+
     float maxSpeed;
-//    
-//    void setup(int player);
-    void update();
-//    void draw();
+
+    void draw() override;
+    void customUpdate() override;
     
     void attack();
+    
+    float width, height;
     
     float startTimeAttack;
     float intervalAttack;
@@ -63,19 +55,11 @@ public:
  
 //    ofColor col;
 
-    
-    ofVec2f pos;
     float angle;
     
-    float size;
-    
     ofColor col;
-    
-    void setup(float x, float y);
+
     void turn(int dir);
-    void draw();
-    
-    void checkIsColliding(Player y);
 
     ofTrueTypeFont healthFont;
     

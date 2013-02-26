@@ -153,14 +153,14 @@ void Creature::checkIsColliding(Player y) {
     ofPoint posNextX = pos;
     posNextX.x += moveX;
     
-    if (ofDist(posNextX.x, posNextX.y, y.pos.x, y.pos.y) > height + y.size) {
+    if (ofDist(posNextX.x, posNextX.y, y.pos.x, y.pos.y) > height + y.width) {
         pos.x += velocity.x;
     }
     
     ofPoint posNextY = pos;
     posNextY.y += moveY;
     
-    if (ofDist(posNextY.x, posNextY.y, y.pos.x, y.pos.y) > height + y.size) {
+    if (ofDist(posNextY.x, posNextY.y, y.pos.x, y.pos.y) > height + y.width) {
         pos.y += velocity.y;
     }
 }

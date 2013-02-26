@@ -8,19 +8,21 @@
 
 #pragma once
 #include "ofMain.h"
+#include "GameObject.h"
+#include "Player.h"
 
-class Weapon {
+class Weapon : public GameObject {
 public:
-    ofPoint pos; // starts randomly, will glue to player
-    float angle;
     
-    bool isHeld;
-    int heldByPlayer;
+    float angle;
     
     ofImage image;
     
+    Player * player;
+    
     void setup();
-    void update(float angle, ofPoint p);
+    //void customUpdate(float angle, ofPoint p);
+    void customUpdate() override;
     void draw();
     
 };

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BB23390A16B7274B00A33144 /* Enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB23390216B7274B00A33144 /* Enemy.cpp */; };
 		BB23390B16B7274B00A33144 /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB23390416B7274B00A33144 /* particle.cpp */; };
 		BB23390C16B7274B00A33144 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB23390616B7274B00A33144 /* Player.cpp */; };
 		BB23390D16B7274B00A33144 /* spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB23390816B7274B00A33144 /* spring.cpp */; };
@@ -25,6 +24,8 @@
 		BB9BD57F16DC0BF2008CD560 /* OIS_static_d.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = BB9BD57816DC0BF2008CD560 /* OIS_static_d.lib */; };
 		BB9BD58016DC0BF2008CD560 /* OIS_vs2010_static.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = BB9BD57A16DC0BF2008CD560 /* OIS_vs2010_static.lib */; };
 		BB9BD58116DC0BF2008CD560 /* OIS_vs2010_static_d.lib in Frameworks */ = {isa = PBXBuildFile; fileRef = BB9BD57B16DC0BF2008CD560 /* OIS_vs2010_static_d.lib */; };
+		BB9BD58916DC188E008CD560 /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB9BD58816DC188E008CD560 /* GameObject.cpp */; };
+		BB9BD58C16DC215C008CD560 /* Blocker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB9BD58B16DC215C008CD560 /* Blocker.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		BBDC608D16BC7996004A3EA6 /* Health.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBDC608C16BC7996004A3EA6 /* Health.cpp */; };
 		BBDC609016BC7AFC004A3EA6 /* Bullet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBDC608F16BC7AFC004A3EA6 /* Bullet.cpp */; };
@@ -78,8 +79,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		BB23390216B7274B00A33144 /* Enemy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Enemy.cpp; sourceTree = "<group>"; };
-		BB23390316B7274B00A33144 /* Enemy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enemy.h; sourceTree = "<group>"; };
 		BB23390416B7274B00A33144 /* particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
 		BB23390516B7274B00A33144 /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
 		BB23390616B7274B00A33144 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
@@ -144,6 +143,10 @@
 		BB9BD57816DC0BF2008CD560 /* OIS_static_d.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = OIS_static_d.lib; sourceTree = "<group>"; };
 		BB9BD57A16DC0BF2008CD560 /* OIS_vs2010_static.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = OIS_vs2010_static.lib; sourceTree = "<group>"; };
 		BB9BD57B16DC0BF2008CD560 /* OIS_vs2010_static_d.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = OIS_vs2010_static_d.lib; sourceTree = "<group>"; };
+		BB9BD58716DC1887008CD560 /* GameObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameObject.h; sourceTree = "<group>"; };
+		BB9BD58816DC188E008CD560 /* GameObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObject.cpp; sourceTree = "<group>"; };
+		BB9BD58A16DC2155008CD560 /* Blocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Blocker.h; sourceTree = "<group>"; };
+		BB9BD58B16DC215C008CD560 /* Blocker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Blocker.cpp; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		BBDC608B16BC7989004A3EA6 /* Health.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Health.h; sourceTree = "<group>"; };
 		BBDC608C16BC7996004A3EA6 /* Health.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Health.cpp; sourceTree = "<group>"; };
@@ -220,14 +223,14 @@
 			children = (
 				BBEEAAEE16CD82D900A5EDB4 /* Spectator.h */,
 				BBEEAAEF16CD82E100A5EDB4 /* Spectator.cpp */,
-				BB23390316B7274B00A33144 /* Enemy.h */,
-				BB23390216B7274B00A33144 /* Enemy.cpp */,
 				BBDC608E16BC7AF3004A3EA6 /* Bullet.h */,
 				BBDC608F16BC7AFC004A3EA6 /* Bullet.cpp */,
 				BBDC608B16BC7989004A3EA6 /* Health.h */,
 				BBDC608C16BC7996004A3EA6 /* Health.cpp */,
 				BB4FBBE716CC7205004A28B0 /* Creature.h */,
 				BB62259816CC7244001E0B28 /* Creature.cpp */,
+				BB9BD58A16DC2155008CD560 /* Blocker.h */,
+				BB9BD58B16DC215C008CD560 /* Blocker.cpp */,
 			);
 			name = "Spectator Items";
 			sourceTree = "<group>";
@@ -481,6 +484,8 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
+				BB9BD58716DC1887008CD560 /* GameObject.h */,
+				BB9BD58816DC188E008CD560 /* GameObject.cpp */,
 				BB26A10516C343050076D260 /* Weapons */,
 				BB26A10016C33E0F0076D260 /* Spectator Items */,
 				BB09075516BC552E00959F83 /* Particle System */,
@@ -583,7 +588,6 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
-				BB23390A16B7274B00A33144 /* Enemy.cpp in Sources */,
 				BB23390B16B7274B00A33144 /* particle.cpp in Sources */,
 				BB23390C16B7274B00A33144 /* Player.cpp in Sources */,
 				BB23390D16B7274B00A33144 /* spring.cpp in Sources */,
@@ -598,6 +602,8 @@
 				BB9BD54516DC0BA5008CD560 /* ofxGamepadHandler.cpp in Sources */,
 				BB9BD54616DC0BA5008CD560 /* ofxGamepadLinux.cpp in Sources */,
 				BB9BD54716DC0BA5008CD560 /* ofxGamepadOIS.cpp in Sources */,
+				BB9BD58916DC188E008CD560 /* GameObject.cpp in Sources */,
+				BB9BD58C16DC215C008CD560 /* Blocker.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

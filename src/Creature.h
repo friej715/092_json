@@ -12,10 +12,6 @@
 
 class Creature {
 public:
-//    vector<ofPoint> positions;
-//    vector<ofPoint> velocities;
-//    vector<float> angles;
-    
     float width;
     float height;
     float health;
