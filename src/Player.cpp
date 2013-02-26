@@ -25,11 +25,13 @@ void Player::setup(float x, float y){
     
     healthFont.loadFont("Candara.ttf", 24);
     
+    objectType = PLAYER;
+    
 }
 
 void Player::customUpdate() {
    
-    cout << "HAI I'M BEING CALLED " << endl;
+    //cout << "HAI I'M BEING CALLED " << endl;
     // determining direction facing
     if (abs(angle) > 0.05) {
         lastAngle = angle;

@@ -166,7 +166,7 @@ void testApp::update(){
         a.attackCooldown = a.attackCooldownMax;
         
         checkPlayerInRange(a, b);
-        checkCreatureInRange(a, creature);
+        //checkCreatureInRange(a, creature);
     }
     
     if (pad1->getButtonValue(9) == false && a.sprintCooldown < 1) {
@@ -194,7 +194,7 @@ void testApp::update(){
         b.attackCooldown = b.attackCooldownMax;
         
         checkPlayerInRange(b, a);
-        checkCreatureInRange(b, creature);
+        //checkCreatureInRange(b, creature);
     }
     
     if (pad2->getButtonValue(9) == false && b.sprintCooldown < 1) {
@@ -219,7 +219,7 @@ void testApp::update(){
     a.angle = atan2(pad1->getAxisValue(3), pad1->getAxisValue(2));
     b.angle = atan2(pad2->getAxisValue(3), pad2->getAxisValue(2));
 
-    cout<<"PLAYER A VEL "<<a.vel<<endl;
+    //cout<<"PLAYER A VEL "<<a.vel<<endl;
     
     
     
@@ -237,10 +237,6 @@ void testApp::update(){
     for (int i = 0; i < objects.size(); i++) {
         objects[i]->update();
     }
-    
-    
-//    a.checkIsColliding(b);
-//    b.checkIsColliding(a);
 
     
     
@@ -260,25 +256,22 @@ void testApp::update(){
     }
     
 
-    
-    creature.figureOutCloser(a, b);
-    creature.update(a, b);
-    creature.checkIsColliding(a);
-    creature.checkIsColliding(b);
-    
-    if (ofDist(creature.pos.x, creature.pos.y, a.pos.x, a.pos.y) < creature.height && creature.canAttack == true) {
-        creature.canAttack = false;
-        creature.startTimeAttack = ofGetElapsedTimef();
-        a.health -= 20;
-    }
+//    creature.checkIsColliding(a);
+//    creature.checkIsColliding(b);
 
-    if (ofDist(creature.pos.x, creature.pos.y, b.pos.x, b.pos.y) < creature.height && creature.canAttack == true) {
-        creature.canAttack = false;
-        creature.startTimeAttack = ofGetElapsedTimef();
-        b.health -= 20;
-    }
     
     collisionLogic();
+    
+    
+    for(int i = 0; i < objects.size() - 1; i++){
+        for(int j = i + 1; j < objects.size(); j++){
+            if(ofDist(objects[i]->pos.x, objects[i]->pos.y, objects[j]->pos.x, objects[j]->pos.y) < ((objects[i]->width + objects[j]->width)/2)){
+                objects[i]->collisionLogic(*objects[j]);
+                objects[j]->collisionLogic(*objects[i]);
+            }
+        }
+    }
+    
     
     
     
@@ -293,32 +286,6 @@ void testApp::draw(){
     for (int i = 0; i < objects.size(); i++) {
         objects[i]->draw();
     }
-    
-//    ofEnableAlphaBlending();
-//    ofSetColor(255, 255, 255, 255);
-//    for (int i = 0; i < weapons.size(); i++) {
-//        if (!weapons[i]->isHeld) {
-//            weapons[i]->draw();   
-//        }
-//        
-//        int hBP = weapons[i]->heldByPlayer;
-//        
-//        if (hBP == 1) {
-//            if (a.isAttacking) {
-//                weapons[i]->draw();
-//            }
-//        }
-//        
-//        if (hBP == 2) {
-//            if (b.isAttacking) {
-//                weapons[i]->draw();
-//            }
-//        }
-//    }
-//    ofDisableAlphaBlending();
-    
-    
-    creature.draw();
 
     
     //tetsing the line
@@ -329,11 +296,6 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed  (int key){ 
-    //    if (key=='a')   a.turn(1);
-    //    if (key=='s')   a.turn(-1);
-    //    
-    //    if (key==358)   b.turn(1);
-    //    if (key==356)   b.turn(-1);
     
 //    cout<<"spawn a damn health"<<endl;
 //    ofPoint pnt;
@@ -348,12 +310,15 @@ void testApp::keyPressed  (int key){
 //--------------------------------------------------------------
 void testApp::keyReleased  (int key){ 
     
-    if (creature.isAlive == false) {
-        creature.isAlive = true;
-        creature.isActive = true;
-    }
+    Creature * myCreature = new Creature();
+    myCreature->setup();
     
+    myCreature->player1 = &a;
+    myCreature->player2 = &b;
     
+    objects.push_back(myCreature);
+    creatures.push_back(myCreature);
+    cout << "creature created "<< endl;
 }
 
 //--------------------------------------------------------------
@@ -383,7 +348,7 @@ void testApp::axisChanged(ofxGamepadAxisEvent& e)
 //--------------------------------------------------------------
 void testApp::buttonPressed(ofxGamepadButtonEvent& e)
 {
-    cout << "BUTTON " << e.button << endl;
+    //cout << "BUTTON " << e.button << endl;
 }
 //--------------------------------------------------------------
 void testApp::buttonReleased(ofxGamepadButtonEvent& e)
@@ -429,9 +394,9 @@ void testApp::checkCreatureInRange(Player &x, Creature &c) {
     // called when a player swings; prereq to calling below function
     cout << "seeing if in range" << endl;
     // if in range
-    if (ofDist(x.pos.x, x.pos.y, creature.pos.x, creature.pos.y) < creature.width + x.width) {
-        checkHitCreature(x, creature);
-    }
+    //if (ofDist(x.pos.x, x.pos.y, creature.pos.x, creature.pos.y) < creature.width + x.width) {
+    //    checkHitCreature(x, creature);
+    //}
     
 }
 
@@ -507,7 +472,7 @@ void testApp::checkHitCreature(Player &x, Creature &c) { // thanks to andy walla
     //check if a is beating on b
     float diffAngle[3];
     //get the angle from a to b
-    diffAngle[0] = atan2(creature.pos.y - x.pos.y, creature.pos.x - x.pos.x);
+    //diffAngle[0] = atan2(creature.pos.y - x.pos.y, creature.pos.x - x.pos.x);
     //two alternate versions to check when this is on the line where the angle wraps around
     diffAngle[1] = diffAngle[0]+TWO_PI; // 180 degrees
     diffAngle[2] = diffAngle[0]-TWO_PI;
@@ -524,7 +489,7 @@ void testApp::checkHitCreature(Player &x, Creature &c) { // thanks to andy walla
     }
     
     if (wasFacing) {
-        creature.health -= 30;
+     //   creature.health -= 30;
     }
     cout << "hit " << endl;
     
@@ -720,9 +685,15 @@ void testApp::createChatObject(string player1Name, string action, string locatio
         myBullet->setup(player1Name, pos, vel);
         objects.push_back(myBullet);
         
-	} else if (action == "creature" && creature.isAlive == false) {
-        creature.isActive = true;
-        creature.isAlive = true;
+	} else if (action == "creature") {
+        Creature * myCreature = new Creature();
+        myCreature->setup();
+        
+        myCreature->player1 = &a;
+        myCreature->player2 = &b;
+        
+        objects.push_back(myCreature);
+        creatures.push_back(myCreature);
         cout << "OH LOOK THINGS ARE GREAT AND LIFE IS COOL"<< endl;
     }
 
@@ -764,7 +735,7 @@ void testApp::reset() {
     objects.push_back(&a);
     objects.push_back(&b);
     
-    creature.setup();
+    //creature.setup();
     
     for (int i = 0; i < 2; i++) {
         Weapon * w = new Weapon();

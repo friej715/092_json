@@ -37,6 +37,10 @@ void GameObject::draw() {
     
 }
 
+void GameObject::collisionLogic(GameObject collider){
+    
+}
+
 void GameObject::checkValidMovement(GameObject * obj) {
     float moveX = vel.x;
     float moveY = vel.y;

@@ -30,11 +30,17 @@ public:
     void update();
     virtual void customUpdate();
     virtual void draw();
+    virtual void collisionLogic(GameObject collider);
 
     void generalSetup();
     void checkValidMovement(GameObject * obj);
     
     virtual bool amIHit(GameObject * obj);
+    
+    enum ObjectType {PLAYER, BULLET, HEALTH, CREATURE, BLOCKER, WEAPON};
+    ObjectType objectType;
+    
+    bool isHolding;
     
     
 };

@@ -23,6 +23,7 @@ public:
     void setup();
     //void customUpdate(float angle, ofPoint p);
     void customUpdate() override;
-    void draw();
+    void draw() override;
+    //void collisionLogic(GameObject collider) override;
     
 };

@@ -9,6 +9,10 @@
 #include <iostream>
 #include "Blocker.h"
 
+void Blocker::setup(){
+    objectType = BLOCKER;
+}
+
 void Blocker::draw() {
     ofRect(500, 500, 100, 50);
 }

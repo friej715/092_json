@@ -9,15 +9,12 @@
 #pragma once
 #include "ofMain.h"
 #include "Player.h"
+#include "GameObject.h"
 
-class Creature {
+class Creature : public GameObject {
 public:
-    float width;
-    float height;
     float health;
   
-    ofPoint pos;
-    ofPoint velocity;
     float angle;
     
     bool isAlive;
@@ -25,9 +22,14 @@ public:
     bool isFollowingPA;
     bool canAttack;
     
+    Player * player1;
+    Player * player2;
+    
     ofColor col;
     
     void setup();
+    void customUpdate() override;
+    
     void update(Player p1, Player p2);
     void draw();
     

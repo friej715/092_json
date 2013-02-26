@@ -49,11 +49,10 @@ class testApp : public ofBaseApp{
     
     vector<GameObject *> objects;
     vector<Weapon *> weapons;
+    vector<Creature *> creatures;
     
     Player a;
     Player b;
-    
-    Creature creature;
     
     vector<Spectator> spectators;
     

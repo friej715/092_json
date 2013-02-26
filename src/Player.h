@@ -23,7 +23,7 @@ public:
     bool isAttacking;
     bool canAttack;
     bool isBlocking;
-    bool isHolding;
+   // bool isHolding;
     bool isDashing; //set to true if the player is dashing
 
     float maxSpeed;

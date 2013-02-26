@@ -24,6 +24,8 @@ void Weapon::setup() {
     image.loadImage("sword.png");
     
     player = NULL;
+    
+    objectType = WEAPON;
 }
 
 /*
@@ -66,3 +68,11 @@ void Weapon::draw() {
     }
     
 }
+/*
+void Weapon::collisionLogic(GameObject collider){
+    if(collider.objectType == PLAYER && !collider.isHolding){
+        isHeld = true;
+        player = *collider;
+    }
+}
+*/

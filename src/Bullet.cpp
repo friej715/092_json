@@ -21,6 +21,8 @@ void Bullet::setup(string myPlayerName, ofVec2f myPos, ofVec2f myVel)
     height = 40;
     
     airshipLittle.loadFont("airship.ttf", 20);
+    
+    objectType = BULLET;
 }
 
 

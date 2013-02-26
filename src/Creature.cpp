@@ -10,10 +10,11 @@
 #include "Creature.h"
 
 void Creature::setup() {
+    generalSetup();
     width = 70;
     height = 50;
-    isAlive = false;
-    isActive = false;
+    isAlive = true;
+    isActive = true;
     canAttack = true;
     health = 100;
     
@@ -21,73 +22,74 @@ void Creature::setup() {
     
     resetPos();
     
-//    for (int i = 0; i < 5; i++) {
-//        ofPoint p;
-//        p.set(ofGetWidth()/2 - (i * radius), ofGetHeight()/2);
-//        positions.push_back(p);
-//        cout << "point set" << endl;
-//    }
+    player1 = NULL;
+    player2 = NULL;
+    
+    objectType = CREATURE;
     
 }
 
 void Creature::update(Player pA, Player pB) {
-    // follow the circle ahead of you
-//    angles.clear();
-//    
-//    float mainAngle = atan2(positions[0].y - ofGetMouseY(), positions[0].x - ofGetMouseX());
-//    angles.push_back(mainAngle);
-//    
-//    positions[0].x -= 2 * cos(angles[0]);
-//    positions[0].y -= 2 * sin(angles[0]);
-//
-//    for (int i = positions.size(); i > 0; i--) {
-//        float a = atan2(positions[i].y - positions[i-1].y, positions[i].x - positions[i-1].x);
-//        angles.push_back(a);
-//    }
-//    
-//    
-//    for (int i = positions.size(); i > 0; i--) {
-//        positions[i].x = i * 2* cos(angles[i]);
-//        positions[i].y = i * 2 * sin(angles[i]);
-//    }
     
-    if (isAlive) {
-        if (isFollowingPA) {
-            angle = atan2(pA.pos.y - pos.y, pA.pos.x - pos.x);
+    
+}
+
+void Creature::customUpdate() {
+
+    if (player1 != NULL && player2 != NULL) {
+        float p1D = ofDist(player1->pos.x, player1->pos.y, pos.x, pos.y); 
+        float p2D = ofDist(player2->pos.x, player2->pos.y, pos.x, pos.y);
+        
+        if (p1D >= p2D) {
+            isFollowingPA = false;
         } else {
-            angle = atan2(pB.pos.y - pos.y, pB.pos.x - pos.x);
+            isFollowingPA = true;
         }
         
-        velocity.x = 2 * cos(angle);
-        velocity.y = 2 * sin(angle);
+        if (isAlive) {
+            if (isFollowingPA) {
+                angle = atan2(player1->pos.y - pos.y, player1->pos.x - pos.x);
+            } else {
+                angle = atan2(player2->pos.y - pos.y, player2->pos.x - pos.x);
+            }
+            
+            cout <<"changing vel" << endl;
+            vel.x = 2 * cos(angle);
+            vel.y = 2 * sin(angle);
+            
+            //pos+=vel;
+            
+        }
         
-        //pos+=velocity;
+        if (health <= 0) {
+            isAlive = false;
+            isActive = false;
+            
+            resetPos();
+            health = 100;
+        }
         
-    }
-    
-    if (health <= 0) {
-        isAlive = false;
-        isActive = false;
+        if (ofGetElapsedTimef() > startTimeAttack + intervalAttack) {
+            canAttack = true;
+        }
         
-        resetPos();
-        health = 100;
-    }
-    
-    if (ofGetElapsedTimef() > startTimeAttack + intervalAttack) {
-        canAttack = true;
+        if (ofDist(pos.x, pos.y, player1->pos.x, player1->pos.y) < height && canAttack == true) {
+            canAttack = false;
+            startTimeAttack = ofGetElapsedTimef();
+            player1->health -= 20;
+        }
+
+        if (ofDist(pos.x, pos.y, player2->pos.x, player2->pos.y) < height && canAttack == true) {
+            canAttack = false;
+            startTimeAttack = ofGetElapsedTimef();
+            player2->health -= 20;
+        }
     }
     
     
 }
 
 void Creature::draw() {
-//    if (isActive) {
-//        ofSetColor(255);
-//        ofFill();
-//        for (int i = 0; i < 5; i++) {
-//            ofCircle(positions[i].x, positions[i].y, radius);
-//        }
-//    }
     
     ofDrawBitmapString(ofToString(health), 100, 100);
     
@@ -105,17 +107,7 @@ void Creature::draw() {
 }
 
 void Creature::figureOutCloser(Player p1, Player p2) {
-    float p1D = ofDist(p1.pos.x, p1.pos.y, pos.x, pos.y); 
-    float p2D = ofDist(p2.pos.x, p2.pos.y, pos.x, pos.y);
-    
-    if (p1D >= p2D) {
-        isFollowingPA = false;
-    } else {
-        isFollowingPA = true;
-    }
-    
-    
-    
+
 }
 
 void Creature::resetPos() {
@@ -147,21 +139,21 @@ void Creature::resetPos() {
 }
 
 void Creature::checkIsColliding(Player y) {
-    float moveX = velocity.x;
-    float moveY = velocity.y;
+    float moveX = vel.x;
+    float moveY = vel.y;
     
     ofPoint posNextX = pos;
     posNextX.x += moveX;
     
     if (ofDist(posNextX.x, posNextX.y, y.pos.x, y.pos.y) > height + y.width) {
-        pos.x += velocity.x;
+        pos.x += vel.x;
     }
     
     ofPoint posNextY = pos;
     posNextY.y += moveY;
     
     if (ofDist(posNextY.x, posNextY.y, y.pos.x, y.pos.y) > height + y.width) {
-        pos.y += velocity.y;
+        pos.y += vel.y;
     }
 }
 

@@ -15,5 +15,6 @@ public:
     
     void draw() override;
     void customUpdate() override;
+    void setup();
     
 };
