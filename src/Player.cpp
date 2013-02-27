@@ -30,6 +30,8 @@ void Player::setup(float x, float y){
     
     objectType = PLAYER;
     
+    attackCooldownMax = 30;
+    
 }
 
 void Player::customUpdate() {

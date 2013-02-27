@@ -42,7 +42,7 @@ public:
     float endWeaponAngle;
     
     int attackCooldown; //if this is above 0, you can't start a new attack
-    int attackCooldownMax = 30; //this is what the timer will be set to when an attack begins
+    int attackCooldownMax; //this is what the timer will be set to when an attack begins
     
     int sprintTimer;
     int sprintTimerMax;
