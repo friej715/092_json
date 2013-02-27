@@ -37,17 +37,13 @@ public:
     void update();
     virtual void customUpdate();
     virtual void draw();
-    virtual void collisionLogic(GameObject * collider);
-    
-//    virtual bool amIHitByPlayer(Player * attacker);
+
     virtual bool amIHit(GameObject * attacker);
     
     virtual void doThingsThatHappenWhenImHit(float damage);
 
     void generalSetup();
     void checkValidMovement(GameObject * obj);
-    
-    //virtual bool amIHit(GameObject * obj);
     
     enum ObjectType {PLAYER, BULLET, HEALTH, CREATURE, BLOCKER, WEAPON};
     ObjectType objectType;

@@ -58,14 +58,6 @@ class testApp : public ofBaseApp{
     
     float angleRange;
     
-    //void checkPlayerInRange(Player &pA, Player &pB);
-    //void checkPlayerHit(Player &pA, Player &pB);
-    
-    //void checkCreatureInRange(Player &pA, Creature &c);
-    //void checkHitCreature(Player &pA, Creature &c);
-
-    
-    
     void removeObject(int num);
     
     
