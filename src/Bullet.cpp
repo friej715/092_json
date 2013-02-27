@@ -43,8 +43,10 @@ void Bullet::draw(){
     ofRectMode(OF_RECTMODE_CORNER);
 }
 
+/*
 void Bullet::collisionLogic(GameObject * collider){
     if(collider->objectType == BLOCKER){
         dead = true;
     }
 }
+*/

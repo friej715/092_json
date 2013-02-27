@@ -12,7 +12,7 @@
 void Creature::setup() {
     generalSetup();
     width = 70;
-    height = 50;
+    height = 70;
     isAlive = true;
     isActive = true;
     canAttack = true;
@@ -56,8 +56,6 @@ void Creature::customUpdate() {
             cout <<"changing vel" << endl;
             vel.x = 2 * cos(angle);
             vel.y = 2 * sin(angle);
-            
-            //pos+=vel;
             
         }
         
@@ -139,6 +137,7 @@ void Creature::resetPos() {
 }
 
 void Creature::checkIsColliding(Player y) {
+    /*
     float moveX = vel.x;
     float moveY = vel.y;
     
@@ -155,6 +154,7 @@ void Creature::checkIsColliding(Player y) {
     if (ofDist(posNextY.x, posNextY.y, y.pos.x, y.pos.y) > height + y.width) {
         pos.y += vel.y;
     }
+     */
 }
 
 void Creature::attack() {
