@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BB23390B16B7274B00A33144 /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB23390416B7274B00A33144 /* particle.cpp */; };
 		BB23390C16B7274B00A33144 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB23390616B7274B00A33144 /* Player.cpp */; };
-		BB23390D16B7274B00A33144 /* spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB23390816B7274B00A33144 /* spring.cpp */; };
 		BB26A10216C342CA0076D260 /* Weapon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB26A10116C342CA0076D260 /* Weapon.cpp */; };
 		BB62259916CC7244001E0B28 /* Creature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB62259816CC7244001E0B28 /* Creature.cpp */; };
 		BB84D25516D5433200F7BF7B /* IRC.cc in Sources */ = {isa = PBXBuildFile; fileRef = BB84D25316D5433200F7BF7B /* IRC.cc */; };
@@ -79,12 +77,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		BB23390416B7274B00A33144 /* particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
-		BB23390516B7274B00A33144 /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
 		BB23390616B7274B00A33144 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
 		BB23390716B7274B00A33144 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
-		BB23390816B7274B00A33144 /* spring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spring.cpp; sourceTree = "<group>"; };
-		BB23390916B7274B00A33144 /* spring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spring.h; sourceTree = "<group>"; };
 		BB26A10116C342CA0076D260 /* Weapon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Weapon.cpp; sourceTree = "<group>"; };
 		BB26A10416C342F90076D260 /* Weapon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Weapon.h; sourceTree = "<group>"; };
 		BB4FBBE716CC7205004A28B0 /* Creature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Creature.h; sourceTree = "<group>"; };
@@ -207,17 +201,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BB09075516BC552E00959F83 /* Particle System */ = {
-			isa = PBXGroup;
-			children = (
-				BB23390416B7274B00A33144 /* particle.cpp */,
-				BB23390516B7274B00A33144 /* particle.h */,
-				BB23390816B7274B00A33144 /* spring.cpp */,
-				BB23390916B7274B00A33144 /* spring.h */,
-			);
-			name = "Particle System";
-			sourceTree = "<group>";
-		};
 		BB26A10016C33E0F0076D260 /* Spectator Items */ = {
 			isa = PBXGroup;
 			children = (
@@ -488,7 +471,6 @@
 				BB9BD58816DC188E008CD560 /* GameObject.cpp */,
 				BB26A10516C343050076D260 /* Weapons */,
 				BB26A10016C33E0F0076D260 /* Spectator Items */,
-				BB09075516BC552E00959F83 /* Particle System */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -588,9 +570,7 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
-				BB23390B16B7274B00A33144 /* particle.cpp in Sources */,
 				BB23390C16B7274B00A33144 /* Player.cpp in Sources */,
-				BB23390D16B7274B00A33144 /* spring.cpp in Sources */,
 				BBDC608D16BC7996004A3EA6 /* Health.cpp in Sources */,
 				BBDC609016BC7AFC004A3EA6 /* Bullet.cpp in Sources */,
 				BB26A10216C342CA0076D260 /* Weapon.cpp in Sources */,

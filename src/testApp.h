@@ -2,8 +2,6 @@
 #define _TEST_APP
 
 #include "ofMain.h"
-#include "particle.h"
-#include "spring.h"
 #include "Player.h"
 #include "ofxGamepadHandler.h"
 #include "Health.h"

@@ -8,8 +8,6 @@
 
 #pragma once
 #include "ofMain.h"
-#include "particle.h"
-#include "spring.h"
 #include "GameObject.h"
 
 class Player : public GameObject {

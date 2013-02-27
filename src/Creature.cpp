@@ -11,8 +11,8 @@
 
 void Creature::setup() {
     generalSetup();
-    width = 70;
-    height = 70;
+    width = 40;
+    height = 40;
     isAlive = true;
     isActive = true;
     canAttack = true;
@@ -98,7 +98,7 @@ void Creature::draw() {
         ofPushMatrix();
         ofTranslate(pos.x, pos.y);
         ofRotateZ(ofRadToDeg(angle));
-        ofEllipse(0, 0, width, height);
+        ofCircle(0, 0, width);
         ofPopMatrix();
         ofDisableAlphaBlending();
     }

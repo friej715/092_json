@@ -4,15 +4,7 @@
  
  to-do: 
  need now:
- - fix size of players
- - slower movement when blocking
- 
- 
- need soon:
- - vector of player positions to prevent kickback from joystick issues
- - integration of weapons/health/baddie drops
- - integrate secondary weapon
- - add in drop button
+ - add angle to all gameobjects
  */
 
 
@@ -71,6 +63,8 @@ public:
 
 //--------------------------------------------------------------
 void testApp::setup(){	
+    ofSetWindowTitle("gamepadExampleApp");
+    
     reset();
     
     tIRC = new threadedIRC(myString, &weShouldCheck);
@@ -173,8 +167,6 @@ void testApp::update(){
             }
         }
         
-        //checkPlayerHit(a, b);
-        //checkCreatureInRange(a, creature);
     }
     
     if (pad1->getButtonValue(9) == false && a.sprintCooldown < 1) {
@@ -208,9 +200,6 @@ void testApp::update(){
                 }
             }
         }
-        
-        //checkPlayerHit(b, a);
-        //checkCreatureInRange(b, creature);
     }
     
     if (pad2->getButtonValue(9) == false && b.sprintCooldown < 1) {
@@ -628,12 +617,12 @@ void testApp::reset() {
     
     //creature.setup();
     
-//    for (int i = 0; i < 2; i++) {
-//        Weapon * w = new Weapon();
-//        w->setup();
-//        objects.push_back(w);
-//        weapons.push_back(w);
-//    }
+    for (int i = 0; i < 2; i++) {
+        Weapon * w = new Weapon();
+        w->setup();
+        objects.push_back(w);
+        weapons.push_back(w);
+    }
     
     angleRange = ofDegToRad(45);
     airship.loadFont("airship.ttf", 36);

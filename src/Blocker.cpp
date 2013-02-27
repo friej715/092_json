@@ -20,7 +20,7 @@ void Blocker::setup(){
 }
 
 void Blocker::draw() {
-    ofCircle(pos.x, pos.y, width, width);
+    ofCircle(pos.x, pos.y, width);
 }
 
 void Blocker::customUpdate() {

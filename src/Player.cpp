@@ -15,7 +15,8 @@ void Player::setup(float x, float y){
     col = ofColor::gray;
     angle = 0;
     pos.set(x,y);
-    width = height = 40;
+    width = 40;
+    height = 40;
     canAttack = true;
     
     maxSpeed = 6.0f;
