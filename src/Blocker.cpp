@@ -10,11 +10,17 @@
 #include "Blocker.h"
 
 void Blocker::setup(){
+    generalSetup();
+    
     objectType = BLOCKER;
+    width = 50;
+    canBeHit = false;
+    
+    pos.set(300,300);
 }
 
 void Blocker::draw() {
-    ofRect(500, 500, 100, 50);
+    ofCircle(pos.x, pos.y, width, width);
 }
 
 void Blocker::customUpdate() {

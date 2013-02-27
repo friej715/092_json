@@ -13,6 +13,7 @@ void Weapon::setup() {
     generalSetup();
     canBeHeld = true;
     canCollide = false;
+    canBeHit = false;
     
     pos.x = ofRandom(ofGetWidth());
     pos.y = ofRandom(ofGetHeight());

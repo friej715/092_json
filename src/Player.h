@@ -17,7 +17,7 @@ public:
     void setup(float x, float y);
     
     
-    int health;
+ //   int health;
     
     float lastAngle;
     bool isAttacking;
@@ -31,9 +31,11 @@ public:
     void draw() override;
     void customUpdate() override;
     
+    bool amIHit(GameObject * attacker) override;
+    
     void attack();
     
-    float width, height;
+    //float width, height;
     
     float startTimeAttack;
     float intervalAttack;
@@ -55,7 +57,7 @@ public:
  
 //    ofColor col;
 
-    float angle;
+    //float angle;
     
     ofColor col;
 

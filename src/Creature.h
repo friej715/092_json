@@ -13,9 +13,9 @@
 
 class Creature : public GameObject {
 public:
-    float health;
+    //float health;
   
-    float angle;
+    //float angle;
     
     bool isAlive;
     bool isActive;

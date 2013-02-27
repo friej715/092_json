@@ -17,6 +17,9 @@ public:
     
 	void customUpdate() override;
 	void draw() override;
+    void collisionLogic(GameObject * collider) override;
+
+    
     
 	string playerName;
         

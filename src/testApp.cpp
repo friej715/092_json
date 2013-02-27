@@ -165,7 +165,15 @@ void testApp::update(){
         
         a.attackCooldown = a.attackCooldownMax;
         
-        checkPlayerInRange(a, b);
+        for (int i = 0; i < objects.size(); i++) {
+            if (objects[i] != &a && objects[i]->canBeHit) { // 0 is where player 1 is
+                if ( objects[i]->amIHit(&a) ){ // so this probably needs to be written for player and object
+                    objects[i]->doThingsThatHappenWhenImHit(20);
+                }
+            }
+        }
+        
+        //checkPlayerHit(a, b);
         //checkCreatureInRange(a, creature);
     }
     
@@ -193,7 +201,15 @@ void testApp::update(){
         
         b.attackCooldown = b.attackCooldownMax;
         
-        checkPlayerInRange(b, a);
+        for (int i = 0; i < objects.size(); i++) {
+            if (objects[i] != &b && objects[i]->canBeHit) { // 1 is where player 2 is
+                if ( objects[i]->amIHit(&b) ){ // so this probably needs to be written for player and object
+                    objects[i]->doThingsThatHappenWhenImHit( 20 );
+                }
+            }
+        }
+        
+        //checkPlayerHit(b, a);
         //checkCreatureInRange(b, creature);
     }
     
@@ -229,15 +245,48 @@ void testApp::update(){
     }
     
     for (int i = 0; i < objects.size(); i++) {
-        for (int k = 0; k < i; k++) {
-            objects[i]->checkValidMovement(objects[k]);
+        for (int k = 0; k < objects.size(); k++) {
+            cout<<"i "<<i<<" colide: "<<objects[i]->canCollide<<"     k "<<k<<endl;
+            if (k!=i && objects[k]->canCollide && objects[i]->canCollide){
+                objects[i]->checkValidMovement(objects[k]);
+            }
         }
     }
     
     for (int i = 0; i < objects.size(); i++) {
         objects[i]->update();
+        //if(objects[i]->dead == true){
+        //    removeObject(i);
+        //}
     }
 
+    
+    // how do we do collision???
+    // we want to deal with: objs touching, objs + player touching, player + player touching
+    // what is common to all of these? well, distance. 
+    // after that we need to know whether we have to check whether it's a player, and if so, whether they're blocking
+    
+    /*
+        amITouching(GameObject * obj); // deals with distance--maybe a bool?
+        if (amITouching(GameObject * obj) == true) {
+            // maybe here we check type and change the function based on that)
+            if (type == destructible && obj->type == destructible) { // if we're both destructible
+     
+            } else if (type == destructible && obj->type == player) {// if this is a player
+
+            } else if (type == player && obj->type == player) { // if we're both players
+     
+            } else if (type == player && obj->type == destructible) { // if this is a destructible
+     
+            }
+        }
+     
+     
+     */
+     
+    // we only care about the players inasmuch as their blocking/attacking status.
+    // if they're not attacking, we stop. if they are, we see if the other player is blocking.
+    
     
     
     
@@ -266,8 +315,8 @@ void testApp::update(){
     for(int i = 0; i < objects.size() - 1; i++){
         for(int j = i + 1; j < objects.size(); j++){
             if(ofDist(objects[i]->pos.x, objects[i]->pos.y, objects[j]->pos.x, objects[j]->pos.y) < ((objects[i]->width + objects[j]->width)/2)){
-                objects[i]->collisionLogic(*objects[j]);
-                objects[j]->collisionLogic(*objects[i]);
+                objects[i]->collisionLogic(objects[j]);
+                objects[j]->collisionLogic(objects[i]);
             }
         }
     }
@@ -319,6 +368,9 @@ void testApp::keyReleased  (int key){
     objects.push_back(myCreature);
     creatures.push_back(myCreature);
     cout << "creature created "<< endl;
+    
+//    createChatObject("hwllo", "bullet", "right");
+//    cout << "bullet created "<< endl;
 }
 
 //--------------------------------------------------------------
@@ -378,17 +430,7 @@ void testApp::povChanged(ofxGamepadPovEvent &e)
 	cout << endl;
 }
 
-//--------------------------------------------------------------
-void testApp::checkPlayerInRange(Player &x, Player &y) {
-    // called when a player swings; prereq to calling below function
-    cout << "seeing if in range" << endl;
-    // if in range
-    if (ofDist(x.pos.x, x.pos.y, y.pos.x, y.pos.y) < x.width*3) {
-        checkPlayerHit(x, y);
-    }
-    
-}
-
+/*
 //--------------------------------------------------------------
 void testApp::checkCreatureInRange(Player &x, Creature &c) {
     // called when a player swings; prereq to calling below function
@@ -399,102 +441,111 @@ void testApp::checkCreatureInRange(Player &x, Creature &c) {
     //}
     
 }
+*/
 
-
+/*
 //--------------------------------------------------------------
 void testApp::checkPlayerHit(Player &x, Player &y) { // thanks to andy wallace
-    // in range and swinging
-    float angleRange = ofDegToRad(45);
     
-    //check if a is beating on b
-    float diffAngle[3];
-    //get the angle from a to b
-    diffAngle[0] = atan2(y.pos.y - x.pos.y, y.pos.x - x.pos.x);
-    //two alternate versions to check when this is on the line where the angle wraps around
-    diffAngle[1] = diffAngle[0]+TWO_PI; // 180 degrees
-    diffAngle[2] = diffAngle[0]-TWO_PI;
-    
-    bool wasFacing = false; //assume a was not facing b
-    
-    for (int i=0; i<3; i++){
-        if ( abs(x.angle-diffAngle[i]) < angleRange){
-            //a is facing b
-            //x.col = ofColor::cyan;
-            wasFacing = true;
-            
-            //check if b is facing a - if it is, then b is blocking
-            float diffAngle2[3];
-            //now get the angle from b to a
-            diffAngle2[0] = atan2(x.pos.y - y.pos.y, x.pos.x - y.pos.x);
-            
-            //then make the two alternate verisons to check
-            diffAngle2[1] = diffAngle2[0]+TWO_PI;
-            diffAngle2[2] = diffAngle2[0]-TWO_PI;
-            
-            bool wasFacing2 = false;    //assume that b was facing away from a
-            
-            for (int k=0; k<3; k++){
-                if (abs(y.angle-diffAngle2[k]) < angleRange){
-                    wasFacing2 = true;
+    if (ofDist(x.pos.x, x.pos.y, y.pos.x, y.pos.y) < x.width*3) {
+        // in range and swinging
+        float angleRange = ofDegToRad(45);
+        
+        //check if a is beating on b
+        float diffAngle[3];
+        //get the angle from a to b
+        diffAngle[0] = atan2(y.pos.y - x.pos.y, y.pos.x - x.pos.x);
+        //two alternate versions to check when this is on the line where the angle wraps around
+        diffAngle[1] = diffAngle[0]+TWO_PI; // 180 degrees
+        diffAngle[2] = diffAngle[0]-TWO_PI;
+        
+        bool wasFacing = false; //assume a was not facing b
+        
+        for (int i=0; i<3; i++){
+            if ( abs(x.angle-diffAngle[i]) < angleRange){
+                //a is facing b
+                //x.col = ofColor::cyan;
+                wasFacing = true;
+                
+                //check if b is facing a - if it is, then b is blocking
+                float diffAngle2[3];
+                //now get the angle from b to a
+                diffAngle2[0] = atan2(x.pos.y - y.pos.y, x.pos.x - y.pos.x);
+                
+                //then make the two alternate verisons to check
+                diffAngle2[1] = diffAngle2[0]+TWO_PI;
+                diffAngle2[2] = diffAngle2[0]-TWO_PI;
+                
+                bool wasFacing2 = false;    //assume that b was facing away from a
+                
+                for (int k=0; k<3; k++){
+                    if (abs(y.angle-diffAngle2[k]) < angleRange){
+                        wasFacing2 = true;
+                    }
+                    
+                }
+                
+                if (wasFacing2 && y.isBlocking){
+                    //b is facing a and is blocking
+                    //y.col = ofColor::green;
+                    //   cout << "safe" << endl;
+                } else {
+                    //b is facing away and can be hit
+                    //y.col = ofColor::red;
+                    cout << "hit" << endl;
+                    y.health-=10;
                 }
                 
             }
-            
-            if (wasFacing2 && y.isBlocking){
-                //b is facing a and is blocking
-                //y.col = ofColor::green;
-                //   cout << "safe" << endl;
-            } else {
-                //b is facing away and can be hit
-                //y.col = ofColor::red;
-                cout << "hit" << endl;
-                y.health-=10;
-            }
-            
         }
-    }
-    
-    if (!wasFacing){
-        //a is not even facing b
-        //x.col = ofColor::gray;
-        //y.col = ofColor::gray;
-        // cout << "not even facing" << endl;
+        
+        if (!wasFacing){
+            //a is not even facing b
+            //x.col = ofColor::gray;
+            //y.col = ofColor::gray;
+            // cout << "not even facing" << endl;
+        }
     }
     
     
 }
+ */
 
 //--------------------------------------------------------------
+/*
 void testApp::checkHitCreature(Player &x, Creature &c) { // thanks to andy wallace
-    // in range and swinging
-    float angleRange = ofDegToRad(45);
-    
-    //check if a is beating on b
-    float diffAngle[3];
-    //get the angle from a to b
-    //diffAngle[0] = atan2(creature.pos.y - x.pos.y, creature.pos.x - x.pos.x);
-    //two alternate versions to check when this is on the line where the angle wraps around
-    diffAngle[1] = diffAngle[0]+TWO_PI; // 180 degrees
-    diffAngle[2] = diffAngle[0]-TWO_PI;
-    
-    bool wasFacing = false; //assume a was not facing b
-    
-    for (int i=0; i<3; i++){
-        if ( abs(x.angle-diffAngle[i]) < angleRange){
-            //a is facing b
-            x.col = ofColor::cyan;
-            wasFacing = true;
-            
+    if (ofDist(x.pos.x, x.pos.y, c.pos.x, c.pos.y) < c.width + x.width) {
+        // in range and swinging
+        float angleRange = ofDegToRad(45);
+        
+        //check if a is beating on b
+        float diffAngle[3];
+        //get the angle from a to b
+        //diffAngle[0] = atan2(creature.pos.y - x.pos.y, creature.pos.x - x.pos.x);
+        //two alternate versions to check when this is on the line where the angle wraps around
+        diffAngle[1] = diffAngle[0]+TWO_PI; // 180 degrees
+        diffAngle[2] = diffAngle[0]-TWO_PI;
+        
+        bool wasFacing = false; //assume a was not facing b
+        
+        for (int i=0; i<3; i++){
+            if ( abs(x.angle-diffAngle[i]) < angleRange){
+                //a is facing b
+                x.col = ofColor::cyan;
+                wasFacing = true;
+                
+            }
         }
+        
+        if (wasFacing) {
+         //   creature.health -= 30;
+        }
+        cout << "hit " << endl;
     }
-    
-    if (wasFacing) {
-     //   creature.health -= 30;
-    }
-    cout << "hit " << endl;
     
     
 }
+ */
 
 //--------------------------------------------------------------
 float testApp::scrapeValue(string field, string rawText){
@@ -737,12 +788,12 @@ void testApp::reset() {
     
     //creature.setup();
     
-    for (int i = 0; i < 2; i++) {
-        Weapon * w = new Weapon();
-        w->setup();
-        objects.push_back(w);
-        weapons.push_back(w);
-    }
+//    for (int i = 0; i < 2; i++) {
+//        Weapon * w = new Weapon();
+//        w->setup();
+//        objects.push_back(w);
+//        weapons.push_back(w);
+//    }
     
     angleRange = ofDegToRad(45);
     airship.loadFont("airship.ttf", 36);
@@ -752,6 +803,10 @@ void testApp::reset() {
 	keywordList.push_back("bullet");
     keywordList.push_back("creature");
     keywordList.push_back("join");
+    
+    Blocker * myBlocker = new Blocker();
+    myBlocker->setup();
+    objects.push_back(myBlocker);
     
 }
 //--------------------------------------------------------------
