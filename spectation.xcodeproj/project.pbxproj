@@ -230,7 +230,6 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				BB84D25216D542CF00F7BF7B /* cpIRC */,
 				BB9BD52216DC0AD7008CD560 /* ofxGamepad */,
 			);
 			name = addons;
@@ -242,7 +241,8 @@
 				BB84D25316D5433200F7BF7B /* IRC.cc */,
 				BB84D25416D5433200F7BF7B /* IRC.h */,
 			);
-			path = cpIRC;
+			name = cpIRC;
+			path = ../cpIRC;
 			sourceTree = "<group>";
 		};
 		BB9BD52216DC0AD7008CD560 /* ofxGamepad */ = {
@@ -462,6 +462,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				BB84D25216D542CF00F7BF7B /* cpIRC */,
 				BB23390616B7274B00A33144 /* Player.cpp */,
 				BB23390716B7274B00A33144 /* Player.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
