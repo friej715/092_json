@@ -14,7 +14,8 @@ void GameObject::generalSetup() {
     canCollide = true;
     canAttack = false;
     canBeHit = true;
-    
+    shouldPassivelyCheckCollision = false;
+    dead = false;
 }
 
 void GameObject::preUpdate() {
@@ -42,8 +43,8 @@ void GameObject::draw() {
 
 
 bool GameObject::amIHit(GameObject * attacker) {
-    cout<<"norm hit"<<endl;
-    if (ofDist(pos.x, pos.y, attacker->pos.x, attacker->pos.y) < width + attacker->width) {
+    if (ofDist(pos.x, pos.y, attacker->pos.x, attacker->pos.y) < width + attacker->width *2 ) { // x2 is a magic number--will need to accout for weapon size
+        cout << "in range " << endl;
         // in range and swinging
         float angleRange = ofDegToRad(45);
         
@@ -60,13 +61,24 @@ bool GameObject::amIHit(GameObject * attacker) {
         for (int i=0; i<3; i++){
             if ( abs(attacker->angle-diffAngle[i]) < angleRange){
                 //a is facing b
-                return true;
-                
+                wasFacing = true;
+                //return true;
+                cout << "facing other" << endl;
             }
         }
+        
+        if (wasFacing) {
+            return true;
+        }
     }
-    
-    return  false;
+    return false;
+}
+
+bool GameObject::amITouching(GameObject * toucher) {
+    if (ofDist(pos.x, pos.y, toucher->pos.x, toucher->pos.y) < width + toucher->width) {
+        return true;
+    }
+    return false;
 }
 
 
@@ -74,6 +86,9 @@ void GameObject::doThingsThatHappenWhenImHit(float damage) {
     health -= damage;
 }
 
+void GameObject::affectThingTouchingMe(GameObject * thing) {
+    
+}
 
 void GameObject::checkValidMovement(GameObject * obj) {
     float moveX = vel.x;
@@ -82,8 +97,7 @@ void GameObject::checkValidMovement(GameObject * obj) {
     ofPoint posNextX = pos;
     posNextX.x += moveX;
     
-    cout<<ofDist(posNextX.x, posNextX.y, obj->pos.x, obj->pos.y)<<endl;
-    cout<<"this width "<<width<<"   other fucker width "<<obj->width<<endl;
+//    cout<<"this width "<<width<<"   other fucker width "<<obj->width<<endl;
     
     if (ofDist(posNextX.x, posNextX.y, obj->pos.x, obj->pos.y) < width + obj->width) {
         //cout<<"hey fuck you - HORZ"<<endl;

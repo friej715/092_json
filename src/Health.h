@@ -19,6 +19,9 @@ public:
 	void customUpdate() override;
 	void draw() override;
     
+    void doThingsThatHappenWhenImHit(float damage) override;
+    void affectThingTouchingMe(GameObject * toucher) override;
+    
 	string playerName;
     
     ofTrueTypeFont airshipLittle;

@@ -12,6 +12,7 @@
 #include "Irc.h"
 #include "Blocker.h"
 #include "GameObject.h"
+#include "Chaser.h"
 
 
 class testApp : public ofBaseApp{
@@ -80,7 +81,7 @@ class testApp : public ofBaseApp{
     // ramiro code
     void evaluateChat(string chat, int newLength);
     void evaluateIrcChat(string playerName, string chatText);
-    void createChatObject(string player, string action, string location);
+    void createChatObject(string player1Name, string action, string location, string modifier);
     void collisionLogic();
     
     vector <string> keywordList;

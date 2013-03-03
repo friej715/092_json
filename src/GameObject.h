@@ -17,6 +17,8 @@ public:
     ofPoint pos;
     ofPoint vel;
     
+    ofColor col;
+    
     float angle;
     float health;
     
@@ -26,12 +28,12 @@ public:
     bool isHeld;
     bool canCollide;
     bool canBeHit;
+    bool shouldPassivelyCheckCollision;
     
     bool canMoveHorizontal;
     bool canMoveVertical;
     
     bool canAttack;
-    
     
     void preUpdate(); // for collision purposes
     void update();
@@ -39,7 +41,8 @@ public:
     virtual void draw();
 
     virtual bool amIHit(GameObject * attacker);
-    
+    virtual bool amITouching(GameObject * toucher);
+    virtual void affectThingTouchingMe(GameObject * thing);
     virtual void doThingsThatHappenWhenImHit(float damage);
 
     void generalSetup();

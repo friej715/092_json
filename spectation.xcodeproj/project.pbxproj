@@ -28,6 +28,7 @@
 		BBDC608D16BC7996004A3EA6 /* Health.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBDC608C16BC7996004A3EA6 /* Health.cpp */; };
 		BBDC609016BC7AFC004A3EA6 /* Bullet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBDC608F16BC7AFC004A3EA6 /* Bullet.cpp */; };
 		BBEEAAF016CD82E100A5EDB4 /* Spectator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBEEAAEF16CD82E100A5EDB4 /* Spectator.cpp */; };
+		BBF314F416E00E940053C962 /* Chaser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBF314F216E00E940053C962 /* Chaser.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
@@ -148,6 +149,8 @@
 		BBDC608F16BC7AFC004A3EA6 /* Bullet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bullet.cpp; sourceTree = "<group>"; };
 		BBEEAAEE16CD82D900A5EDB4 /* Spectator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spectator.h; sourceTree = "<group>"; };
 		BBEEAAEF16CD82E100A5EDB4 /* Spectator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Spectator.cpp; sourceTree = "<group>"; };
+		BBF314F216E00E940053C962 /* Chaser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chaser.cpp; sourceTree = "<group>"; };
+		BBF314F316E00E940053C962 /* Chaser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chaser.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
@@ -204,6 +207,8 @@
 		BB26A10016C33E0F0076D260 /* Spectator Items */ = {
 			isa = PBXGroup;
 			children = (
+				BBF314F216E00E940053C962 /* Chaser.cpp */,
+				BBF314F316E00E940053C962 /* Chaser.h */,
 				BBEEAAEE16CD82D900A5EDB4 /* Spectator.h */,
 				BBEEAAEF16CD82E100A5EDB4 /* Spectator.cpp */,
 				BBDC608E16BC7AF3004A3EA6 /* Bullet.h */,
@@ -584,6 +589,7 @@
 				BB9BD54716DC0BA5008CD560 /* ofxGamepadOIS.cpp in Sources */,
 				BB9BD58916DC188E008CD560 /* GameObject.cpp in Sources */,
 				BB9BD58C16DC215C008CD560 /* Blocker.cpp in Sources */,
+				BBF314F416E00E940053C962 /* Chaser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,7 +19,8 @@ public:
     
     float lastAngle;
     bool isAttacking;
-    bool canAttack;
+    //bool canAttack;
+    bool canAttackNow;
     bool isBlocking;
    // bool isHolding;
     bool isDashing; //set to true if the player is dashing

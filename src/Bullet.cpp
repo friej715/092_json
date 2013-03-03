@@ -17,9 +17,15 @@ void Bullet::setup(string myPlayerName, ofVec2f myPos, ofVec2f myVel)
 	playerName = myPlayerName;
 	pos = myPos;
 	vel = myVel;
+    shouldPassivelyCheckCollision = true;
+    canAttack = true;
     
-    width = 40;
-    height = 40;
+    width = 20;
+    height = 20;
+    
+    health = 10;
+    
+    angle = atan2(pos.y - pos.y + vel.y, pos.x - pos.x + vel.x);
     
     airshipLittle.loadFont("airship.ttf", 20);
     
@@ -33,20 +39,29 @@ void Bullet::customUpdate(){
 	if(pos.x > 2000 || pos.x < -2000 || pos.y > 2000 || pos.y < 2000){
 		//dead = true;
 	}
+    
+    cout << "dead? " << dead << endl;
 }
 
 void Bullet::draw(){
-	ofSetColor(178, 34, 34);
-	ofRect(pos, width, height);
-    ofSetColor(255, 120, 120);
-    airshipLittle.drawString(ofToString(playerName), pos.x, pos.y + 35);
-    ofRectMode(OF_RECTMODE_CORNER);
-}
-
-/*
-void Bullet::collisionLogic(GameObject * collider){
-    if(collider->objectType == BLOCKER){
-        dead = true;
+    if (!dead) {    
+        ofSetColor(178, 34, 34);
+        ofCircle(pos, width);
+        ofSetColor(255, 120, 120);
+        //airshipLittle.drawString(ofToString(playerName), pos.x, pos.y + 35);
+        airshipLittle.drawString(ofToString(health), pos.x, pos.y + 35);
+        ofRectMode(OF_RECTMODE_CORNER);
     }
 }
-*/
+
+void Bullet::affectThingTouchingMe(GameObject * toucher) {
+    
+    toucher->health-=10;
+    dead = true;
+    
+}
+
+void Bullet::doThingsThatHappenWhenImHit(float damage) {
+    dead = true;
+}
+

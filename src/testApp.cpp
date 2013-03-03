@@ -145,23 +145,24 @@ void testApp::update(){
         //   a.canAttack = true;
     } else {
         a.isBlocking = true;
-        a.canAttack = false;
+        a.canAttackNow = false;
     }
     
-    if (pad1->getButtonValue(11) == false && a.isAttacking == false && a.canAttack == true && a.isHolding == true) {
+    if (pad1->getButtonValue(11) == false && a.isAttacking == false && a.canAttackNow == true && a.isHolding == true) {
         a.startTimeAttack = ofGetElapsedTimef();
         a.startWeaponAngle = ofRadToDeg(a.lastAngle);
         a.endWeaponAngle = a.startWeaponAngle + 90;
         a.currentWeaponAngle = a.startWeaponAngle;
         
         a.isAttacking = true;
-        a.canAttack = false;
+        a.canAttackNow = false;
         
         a.attackCooldown = a.attackCooldownMax;
         
         for (int i = 0; i < objects.size(); i++) {
             if (objects[i] != &a && objects[i]->canBeHit) { // 0 is where player 1 is
                 if ( objects[i]->amIHit(&a) ){ // so this probably needs to be written for player and object
+                    cout << "hit connects " << endl;
                     objects[i]->doThingsThatHappenWhenImHit(20);
                 }
             }
@@ -179,17 +180,17 @@ void testApp::update(){
         //    b.canAttack = true;
     } else {
         b.isBlocking = true;
-        b.canAttack = false;
+        b.canAttackNow = false;
     }
     
-    if (pad2->getButtonValue(11) == false && b.isAttacking == false && b.canAttack == true && b.isHolding == true) {
+    if (pad2->getButtonValue(11) == false && b.isAttacking == false && b.canAttackNow == true && b.isHolding == true) {
         b.startTimeAttack = ofGetElapsedTimef();
         b.startWeaponAngle = ofRadToDeg(b.lastAngle);
         b.endWeaponAngle = b.startWeaponAngle + 90;
         b.currentWeaponAngle = b.startWeaponAngle;
         
         b.isAttacking = true;
-        b.canAttack = false;
+        b.canAttackNow = false;
         
         b.attackCooldown = b.attackCooldownMax;
         
@@ -197,6 +198,7 @@ void testApp::update(){
             if (objects[i] != &b && objects[i]->canBeHit) { // 1 is where player 2 is
                 if ( objects[i]->amIHit(&b) ){ // so this probably needs to be written for player and object
                     objects[i]->doThingsThatHappenWhenImHit( 20 );
+                    cout << "hit connects " << endl;
                 }
             }
         }
@@ -224,8 +226,44 @@ void testApp::update(){
     a.angle = atan2(pad1->getAxisValue(3), pad1->getAxisValue(2));
     b.angle = atan2(pad2->getAxisValue(3), pad2->getAxisValue(2));
 
-    //cout<<"PLAYER A VEL "<<a.vel<<endl;
     
+    
+    for (int i = 0; i < objects.size(); i++) {
+        if (objects[i]->shouldPassivelyCheckCollision) {
+            for (int k = 0; k < objects.size(); k++) {
+                if (objects[i]!= objects[k]) {
+                    if (objects[k]->amITouching(objects[i])) {
+                        objects[i]->affectThingTouchingMe(objects[k]);
+                        objects[i]->doThingsThatHappenWhenImHit(20);
+                    }
+                }
+            }
+        }
+    }
+    
+    for (int i = 0; i < creatures.size(); i++) {
+        if (creatures[i]->canAttack) {
+            creatures[i]->canAttack = false;
+            
+            if (a.amIHit(creatures[i])) {
+                a.doThingsThatHappenWhenImHit(20);
+            }
+            
+            if (b.amIHit(creatures[i])) {
+                b.doThingsThatHappenWhenImHit(20);
+            }
+            
+        }
+    }
+     
+//    for (int i = 0; i < objects.size(); i++) {
+//        if (objects[i] != &a && objects[i]->canBeHit) { // 0 is where player 1 is
+//            if ( objects[i]->amIHit(&a) ){ // so this probably needs to be written for player and object
+//                cout << "hit connects " << endl;
+//                objects[i]->doThingsThatHappenWhenImHit(20);
+//            }
+//        }
+//    }
     
     
     
@@ -233,9 +271,10 @@ void testApp::update(){
         objects[i]->preUpdate();
     }
     
+    
     for (int i = 0; i < objects.size(); i++) {
         for (int k = 0; k < objects.size(); k++) {
-            cout<<"i "<<i<<" colide: "<<objects[i]->canCollide<<"     k "<<k<<endl;
+            //cout<<"i "<<i<<" colide: "<<objects[i]->canCollide<<"     k "<<k<<endl;
             if (k!=i && objects[k]->canCollide && objects[i]->canCollide){
                 objects[i]->checkValidMovement(objects[k]);
             }
@@ -244,9 +283,9 @@ void testApp::update(){
     
     for (int i = 0; i < objects.size(); i++) {
         objects[i]->update();
-        //if(objects[i]->dead == true){
-        //    removeObject(i);
-        //}
+        if(objects[i]->dead == true){
+            removeObject(i);
+        }
     }
     
     
@@ -313,6 +352,19 @@ void testApp::keyReleased  (int key){
     creatures.push_back(myCreature);
     cout << "creature created "<< endl;
     
+    ofPoint p;
+    p.x = ofRandom(ofGetWidth());
+    p.y = ofRandom(ofGetHeight());
+    
+    ofPoint v;
+    v.x = .000001;
+    
+    Health * myHealth = new Health();
+    myHealth->setup("yo", p, v);
+    
+    objects.push_back(myHealth);
+    
+    
 //    createChatObject("hwllo", "bullet", "right");
 //    cout << "bullet created "<< endl;
 }
@@ -329,11 +381,19 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+    Chaser * myChaser = new Chaser();
+	ofPoint tempPoint;
+	tempPoint.x = x;
+	tempPoint.y = y;
+    myChaser->setup(tempPoint, &b, "left");
     
+    objects.push_back(myChaser);
+    cout << "creature created "<< endl;
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(){
+    
     
 }
 //--------------------------------------------------------------
@@ -389,7 +449,7 @@ float testApp::scrapeValue(string field, string rawText){
 void updateOSC() {
 }
 
-
+/*
 //--------------------------------------------------------------
 void testApp::evaluateChat(string chat, int newLength){
 	// bool foundPhrase = false;
@@ -451,11 +511,13 @@ void testApp::evaluateChat(string chat, int newLength){
 		}
 	}
 }
+ */
 
 void testApp::evaluateIrcChat(string playerName, string chat){
-
+    
 	string actionName;
 	string positionName;
+	string modifierName;
 	int currentCharLocation = 0;
 	//int chatLength = chat.length();
     
@@ -473,7 +535,7 @@ void testApp::evaluateIrcChat(string playerName, string chat){
 		if (currentCharLocation >= chat.length()) {break;}
 	}
     
-	//skip over any spaces that show up before the next words
+	//skip over any spaces that show up before the next word
 	while(chat[currentCharLocation] == ' ' && currentCharLocation < chat.length()) { 
 		currentCharLocation++;
 		if (currentCharLocation >= chat.length()) {break;}
@@ -486,6 +548,19 @@ void testApp::evaluateIrcChat(string playerName, string chat){
 		if (currentCharLocation >= chat.length()) {break;}
 	}
     
+	//skip over any spaces that show up before the next word
+	while(chat[currentCharLocation] == ' ' && currentCharLocation < chat.length()) { 
+		currentCharLocation++;
+		if (currentCharLocation >= chat.length()) {break;}
+	}
+    
+	//look through the third word in chat. Put everything in that third word into modifierName.
+	while(chat[currentCharLocation] != ' ' && currentCharLocation < chat.length()) {
+		modifierName += chat[currentCharLocation];
+		currentCharLocation++;
+		if (currentCharLocation >= chat.length()) {break;}
+	}
+    
 	//make sure that actionName and positionName are lower case
 	for(int i = 0; i < actionName.length(); i++) { actionName[i] = tolower(actionName[i]); }
 	for(int i = 0; i < positionName.length(); i++) { positionName[i] = tolower(positionName[i]); }
@@ -493,14 +568,16 @@ void testApp::evaluateIrcChat(string playerName, string chat){
 	for(int i = 0; i < keywordList.size(); i++)
 	{
 		if(actionName == keywordList[i]){
-			if(positionName == "left" || positionName == "right" || positionName == "top" || positionName == "bottom") { createChatObject(playerName, actionName, positionName); }
-			else { createChatObject(playerName, actionName, "random"); }
+			if(positionName == "left" || positionName == "right" || positionName == "top" || positionName == "bottom") {
+				createChatObject(playerName, actionName, positionName, modifierName);
+			}
+			else { createChatObject(playerName, actionName, "random", modifierName); }
 		}
 	}
 }
 
 //--------------------------------------------------------------
-void testApp::createChatObject(string player1Name, string action, string location){
+void testApp::createChatObject(string player1Name, string action, string location, string modifier){
 	cout << "player1: " << player1Name << " Action: " << action << " Location: " << location << "\n";
     
 	ofVec2f pos;
@@ -533,26 +610,26 @@ void testApp::createChatObject(string player1Name, string action, string locatio
     
 	cout << "player1: " << player1Name << " Action: " << action << " pos.x: " << pos.x << " pos.y: " << pos.y << " vel.x: " << vel.x << " vel.y: " << vel.y << "\n";
     
-//    for (int i = 0; i < spectators.size(); i++) {
-//        if (player1Name == spectators[i].name) {
-//            
-//            if(action == "health" && spectators[i].points > 300) { 
-//                Health myHealth(player1Name, pos, vel);
-//                healthList.push_back(myHealth);
-//                spectators[i].points -= 300;
-//            }
-//            else if (action == "bullet" && spectators[i].points > 300) { 
-//                Bullet myBullet(player1Name, pos, vel);
-//                bulletList.push_back(myBullet);
-//                spectators[i].points -= 300;
-//            } else if (action == "creature" && creature.isAlive == false && spectators[i].points > 1200) {
-//                creature.isActive = true;
-//                creature.isAlive = true;
-//                cout << "OH LOOK THINGS ARE GREAT AND LIFE IS COOL"<< endl;
-//                spectators[i].points-= 1200;
-//            }
-//        }
-//    }
+    //    for (int i = 0; i < spectators.size(); i++) {
+    //        if (player1Name == spectators[i].name) {
+    //            
+    //            if(action == "health" && spectators[i].points > 300) { 
+    //                Health myHealth(player1Name, pos, vel);
+    //                healthList.push_back(myHealth);
+    //                spectators[i].points -= 300;
+    //            }
+    //            else if (action == "bullet" && spectators[i].points > 300) { 
+    //                Bullet myBullet(player1Name, pos, vel);
+    //                bulletList.push_back(myBullet);
+    //                spectators[i].points -= 300;
+    //            } else if (action == "creature" && creature.isAlive == false && spectators[i].points > 1200) {
+    //                creature.isActive = true;
+    //                creature.isAlive = true;
+    //                cout << "OH LOOK THINGS ARE GREAT AND LIFE IS COOL"<< endl;
+    //                spectators[i].points-= 1200;
+    //            }
+    //        }
+    //    }
     
     
 	if(action == "health") { 
@@ -576,7 +653,13 @@ void testApp::createChatObject(string player1Name, string action, string locatio
         creatures.push_back(myCreature);
         cout << "OH LOOK THINGS ARE GREAT AND LIFE IS COOL"<< endl;
     }
-
+	else if (action == "chaser"){
+		Chaser * myChaser = new Chaser();
+		if(modifier == "red"){ myChaser->setup(pos, &a, location); }
+		else if(modifier == "blue"){ myChaser->setup(pos, &b, location); }
+        objects.push_back(myChaser);
+	}
+    
 }
 //--------------------------------------------------------------
 void testApp::reset() {
@@ -611,6 +694,9 @@ void testApp::reset() {
     
     a.setup(ofGetWidth()/4, ofGetHeight()/4);
     b.setup(ofGetWidth()*.75, ofGetHeight()*.75);
+    
+    a.col.set(255, 0, 0);
+    b.col.set(0, 0, 255);
     
     objects.push_back(&a);
     objects.push_back(&b);

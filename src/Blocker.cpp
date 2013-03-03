@@ -13,6 +13,7 @@ void Blocker::setup(){
     generalSetup();
     
     objectType = BLOCKER;
+    
     width = 50;
     canBeHit = false;
     

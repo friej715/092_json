@@ -18,6 +18,7 @@ void Player::setup(float x, float y){
     width = 40;
     height = 40;
     canAttack = true;
+    canAttackNow=true;
     
     maxSpeed = 6.0f;
     intervalAttack = .2; // this should probably be in weapon?
@@ -68,9 +69,9 @@ void Player::customUpdate() {
 
     if(attackCooldown > 0) {
         attackCooldown--;
-        canAttack = false;
+        canAttackNow = false;
     } else { 
-        canAttack = true; 
+        canAttackNow = true; 
     }   
     
     if (isAttacking) {
@@ -141,10 +142,21 @@ void Player::sprintLogic() {
 
 bool Player::amIHit(GameObject * attacker) {
     // this is where all the code with blocking and stuff should go i think YEAH I BET IT IS DUDES (love, Andy)
-    cout<<"player on player voilence is all of our problem"<<endl;
+    //cout<<"player on player voilence is all of our problem"<<endl;
     //width*2 is a magic number put there for GAME FEEL(!)  ( . Y . )
-    if (ofDist(pos.x, pos.y, attacker->pos.x, attacker->pos.y) < width*2 + attacker->width) {
-        cout<<"In range like a dick"<<endl;
+    
+    float dist = ofDist(pos.x, pos.y, attacker->pos.x, attacker->pos.y);
+    float minimumDist;
+    
+    
+    //if (attacker->isHolding) {
+    //    minimumDist = width*2 + attacker->width;
+    //} else {
+        minimumDist = width + attacker->width + 10;
+    //}
+    
+    
+    if (dist < minimumDist) {
         // in range and swinging
         float angleRange = ofDegToRad(45);
         
@@ -163,8 +175,6 @@ bool Player::amIHit(GameObject * attacker) {
                 //attacker is facing this
                 wasFacing = true;
                 
-                cout<<"That fuck man attacker was facing my balls"<<endl;
-                
                 //check if this is facing attacker - if it is, then it is blocking
                 float diffAngle2[3];
                 //now get the angle from b to a
@@ -179,7 +189,6 @@ bool Player::amIHit(GameObject * attacker) {
                 for (int k=0; k<3; k++){
                     if (abs(angle-diffAngle2[k]) < angleRange){
                         wasFacing2 = true;
-                        cout<<"I face him! I do!"<<endl;
                     }
                     
                 }
@@ -194,7 +203,6 @@ bool Player::amIHit(GameObject * attacker) {
                 } else {
                     //b is facing away and can be hit
                     //y.col = ofColor::red;
-                    cout << "hit" << endl;
                     return true;
                     //y.health-=10;
                 }

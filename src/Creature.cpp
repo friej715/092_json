@@ -53,7 +53,7 @@ void Creature::customUpdate() {
                 angle = atan2(player2->pos.y - pos.y, player2->pos.x - pos.x);
             }
             
-            cout <<"changing vel" << endl;
+            //cout <<"changing vel" << endl;
             vel.x = 2 * cos(angle);
             vel.y = 2 * sin(angle);
             
@@ -63,14 +63,16 @@ void Creature::customUpdate() {
             isAlive = false;
             isActive = false;
             
-            resetPos();
-            health = 100;
+            //resetPos();
+            //health = 100;
         }
         
         if (ofGetElapsedTimef() > startTimeAttack + intervalAttack) {
             canAttack = true;
+            startTimeAttack = ofGetElapsedTimef();
         }
         
+        /*
         if (ofDist(pos.x, pos.y, player1->pos.x, player1->pos.y) < height && canAttack == true) {
             canAttack = false;
             startTimeAttack = ofGetElapsedTimef();
@@ -82,14 +84,13 @@ void Creature::customUpdate() {
             startTimeAttack = ofGetElapsedTimef();
             player2->health -= 20;
         }
+         */
     }
     
     
 }
 
 void Creature::draw() {
-    
-    ofDrawBitmapString(ofToString(health), 100, 100);
     
     if (isAlive) {
         ofEnableAlphaBlending();
@@ -100,6 +101,7 @@ void Creature::draw() {
         ofRotateZ(ofRadToDeg(angle));
         ofCircle(0, 0, width);
         ofPopMatrix();
+        ofDrawBitmapString(ofToString(health), pos );
         ofDisableAlphaBlending();
     }
 }
